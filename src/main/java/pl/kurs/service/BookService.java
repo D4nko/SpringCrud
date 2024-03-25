@@ -4,9 +4,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.AuthorNotFoundException;
+import pl.kurs.exceptions.BookNotFoundException;
 import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.model.command.CreateBookCommand;
@@ -18,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,7 +32,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
-    private final Book book;
     private final EntityManager entityManager;
 
     @PostConstruct
@@ -40,8 +42,8 @@ public class BookService {
         bookRepository.saveAndFlush(new Book("Ogniem i mieczem", "Powiesc", true, a1));
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public Page<Book> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     public Optional<Book> findBookById(Integer id) {
@@ -56,14 +58,16 @@ public class BookService {
         return bookRepository.save(new Book(command.getTitle(), command.getCategory(), true, authorRepository.findById(command.getAuthorId()).orElseThrow(AuthorNotFoundException::new)));
     }
 
-    public Book edit(EditBookCommand command) {
+    public Book edit(int id, EditBookCommand command) {
+        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
         book.setTitle(command.getTitle());
         book.setCategory(command.getCategory());
         book.setAvailable(command.getAvailable());
         return bookRepository.saveAndFlush(book);
     }
 
-    public Book partiallyEdit(EditBookCommand command) {
+    public Book partiallyEdit(int id, EditBookCommand command) {
+        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
         Optional.ofNullable(command.getTitle()).ifPresent(book::setTitle);
         Optional.ofNullable(command.getCategory()).ifPresent(book::setCategory);
         Optional.ofNullable(command.getAvailable()).ifPresent(book::setAvailable);
@@ -71,37 +75,16 @@ public class BookService {
     }
 
 
-    @Transactional
-    public void importBook(InputStream inputStream) {
-        AtomicInteger counter = new AtomicInteger(0);
-        AtomicLong start = new AtomicLong(System.currentTimeMillis());
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            reader.lines()
-                    .map(line -> line.split(","))
-                    .map(args -> new CreateBookCommand(args))
-                    .peek(command -> countTime(counter, start))
-                    .forEach(this::save);
-        } catch (IOException e) {
-        }
+    public Optional<Book> findById(int id) {
+        return bookRepository.findById(id);
     }
-
-
-    private void countTime(AtomicInteger counter, AtomicLong start) {
-        if (counter.incrementAndGet() % 10000 == 0) {
-            log.info("Imported: {} in {} ms", counter, (System.currentTimeMillis() - start.get()));
-            start.set(System.currentTimeMillis());
-            entityManager.clear();
-        }
-    }
-
 
     // sprawdzcie sobie na starcie jak to u was idzie i postarajcie poprawic ten wynik
     // 1) 20k-40k na sekunde mniej wiecej
     // 2) zeby zuzycie pamieci sie nie zwiekszylo
     // 3) wszystko albo nic
     // 4) testy jakies
-
 
 
 }

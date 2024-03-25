@@ -29,71 +29,44 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookController {
 
-
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
     private final BookService bookService;
-
-    @PostConstruct
-    public void init() {
-        Author a1 = authorRepository.saveAndFlush(new Author("Kazimierz", "Wileki", 1900, 2000));
-        Author a2 = authorRepository.saveAndFlush(new Author("Maria", "Jakas", 1900, 2000));
-
-        bookRepository.saveAndFlush(new Book( "W pustyni i w puszczy", "LEKTURA", true, a1));
-        bookRepository.saveAndFlush(new Book( "Ogniem i mieczem", "LEKTURA", true, a1));
-        bookRepository.saveAndFlush(new Book( "podstawy java", "NAUKOWE", true, a2));
-    }
 
 
     @GetMapping
     public ResponseEntity<Page<BookDto>> findAll(@PageableDefault Pageable pageable) {
         log.info("findAll");
-        return ResponseEntity.ok(bookRepository.findAll(pageable).map(BookDto::from));
+        return ResponseEntity.ok(bookService.findAll(pageable).map(BookDto::from));
     }
 
     // TODO wyjatki rozroznienie
     @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody CreateBookCommand command) {
-        Author author = authorRepository.findById(command.getAuthorId()).orElseThrow(BookNotFoundException::new);
-        Book book = bookRepository.saveAndFlush(new Book(command.getTitle(), command.getCategory(), true, author));
+        Book book = bookService.save(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(BookDto.from(book));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> findBook(@PathVariable int id) {
-        return ResponseEntity.ok(BookDto.from(bookRepository.findById(id).orElseThrow(BookNotFoundException::new)));
+        return ResponseEntity.ok(BookDto.from(bookService.findById(id).orElseThrow(BookNotFoundException::new)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BookDto> deleteBook(@PathVariable int id) {
-        bookRepository.deleteById(id);
+        bookService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BookDto> editBook(@PathVariable int id, @RequestBody EditBookCommand command) {
-        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
-        book.setCategory(command.getCategory());
-        book.setTitle(command.getTitle());
-        book.setAvailable(command.getAvailable());
-        return ResponseEntity.status(HttpStatus.OK).body(BookDto.from(bookRepository.saveAndFlush(book)));
+        Book book = bookService.edit(id, command);
+        return ResponseEntity.status(HttpStatus.OK).body(BookDto.from(book));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<BookDto> editBookPartially(@PathVariable int id, @RequestBody EditBookCommand command) {
-        Book book =  bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
-        Optional.ofNullable(command.getCategory()).ifPresent(book::setCategory);
-        Optional.ofNullable(command.getAvailable()).ifPresent(book::setAvailable);
-        Optional.ofNullable(command.getTitle()).ifPresent(book::setTitle);
-        return ResponseEntity.status(HttpStatus.OK).body(BookDto.from(bookRepository.saveAndFlush(book)));
+        Book book = bookService.partiallyEdit(id, command);
+        return ResponseEntity.status(HttpStatus.OK).body(BookDto.from(book));
     }
-
-    @PostMapping("/_import")
-    public void importBooks(@RequestPart("books")MultipartFile file) throws IOException {
-        bookService.importBook(file.getInputStream());
-    }
-
-
 
 
 }

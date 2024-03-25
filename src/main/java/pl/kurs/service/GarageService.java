@@ -62,6 +62,7 @@ public class GarageService {
         return garageRepository.saveAndFlush(garage);
     }
 
+    @Transactional
     public Garage partiallyEdit(int id, EditGarageCommand command) {
         Garage garage = garageRepository.findByIdWithCars(id).orElseThrow(GarageNotFoundException::new);
         Optional.ofNullable(command.getAddress()).ifPresent(garage::setAddress);
@@ -70,6 +71,7 @@ public class GarageService {
         return garageRepository.saveAndFlush(garage);
     }
 
+    @Transactional
     public void addCarToGarage(int id, int carId) {
         Garage garage = garageRepository.findById(id).orElseThrow(GarageNotFoundException::new);
         Car car = carRepository.findById(carId).orElseThrow(CarNotFoundException::new);

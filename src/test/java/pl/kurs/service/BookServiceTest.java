@@ -10,12 +10,12 @@ import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.repository.AuthorRepository;
 import pl.kurs.repository.BookRepository;
-import pl.kurs.service.BookService;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -28,6 +28,8 @@ public class BookServiceTest {
 
     @InjectMocks
     private BookService bookService;
+
+
 
     @Test
     void shouldFindBookByIdIfBookExists() {
