@@ -63,5 +63,28 @@ class GarageServiceTest {
         assertEquals(expectedGarage, savedGarage);
         verify(garageRepository).saveAndFlush(any());
     }
+    @Test
+    public void shouldFindGarageById() {
+        int id = 1;
+        Garage garage = new Garage(1, "ul. Testowa 1, Testowo", true);
+        when(garageRepository.findByIdWithCars(id)).thenReturn(Optional.of(garage));
+
+        Optional<Garage> foundGarage = garageService.findById(id);
+
+        assertTrue(foundGarage.isPresent());
+        assertEquals(garage, foundGarage.get());
+        verify(garageRepository).findByIdWithCars(id);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenAddingCarToNonexistentGarage() {
+        int garageId = 99;
+        int carId = 1;
+        when(garageRepository.findById(garageId)).thenReturn(Optional.empty());
+
+        assertThrows(GarageNotFoundException.class, () -> garageService.addCarToGarage(garageId, carId));
+        verify(garageRepository).findById(garageId);
+        verify(carRepository, never()).findById(carId);
+    }
 
 }

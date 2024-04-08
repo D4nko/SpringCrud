@@ -8,12 +8,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.kurs.exceptions.BookNotFoundException;
 import pl.kurs.model.Author;
 import pl.kurs.model.Book;
+import pl.kurs.model.command.CreateBookCommand;
+import pl.kurs.model.command.EditBookCommand;
 import pl.kurs.repository.AuthorRepository;
 import pl.kurs.repository.BookRepository;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +31,6 @@ public class BookServiceTest {
 
     @InjectMocks
     private BookService bookService;
-
 
 
     @Test
@@ -55,4 +57,24 @@ public class BookServiceTest {
         assertThrows(BookNotFoundException.class, () -> bookService.findBookById(bookId).orElseThrow(BookNotFoundException::new), "Expected BookNotFoundException to be thrown when book is not found");
         verify(bookRepository).findById(bookId);
     }
+
+    @Test
+    void shouldPartiallyEditBook() {
+        // Arrange
+        int bookId = 1;
+        EditBookCommand command = new EditBookCommand();
+        command.setTitle("Updated Title");
+        Book book = new Book("Old Title", "Old Category", true, new Author());
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(bookRepository.saveAndFlush(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Book partiallyEditedBook = bookService.partiallyEdit(bookId, command);
+
+        // Assert
+        assertEquals(command.getTitle(), partiallyEditedBook.getTitle());
+        assertEquals(book.getCategory(), partiallyEditedBook.getCategory());
+        assertEquals(book.isAvailable(), partiallyEditedBook.isAvailable());
+    }
+
 }
