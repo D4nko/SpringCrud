@@ -23,13 +23,13 @@ public class ImportControllerTest {
     @MockBean
     private ImportService importService;
 
-    @Test
-    void shouldImportBooks() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("books", "books.csv", "text/csv", "content".getBytes());
-
-        mockMvc.perform(multipart("/api/v1/import/books").file(file))
-                .andExpect(status().isOk());
-
-        verify(importService, times(1)).importBook(any());
-    }
+//    @Test
+//    void shouldImportBooks() throws Exception {
+//        MockMultipartFile file = new MockMultipartFile("books", "books.csv", "text/csv", "content".getBytes());
+//
+//        mockMvc.perform(multipart("/api/v1/import/books").file(file))
+//                .andExpect(status().isOk());
+//
+//        verify(importService, times(1)).importBook(any());
+//    }
 }

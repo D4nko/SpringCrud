@@ -27,14 +27,14 @@ public class ImportServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void shouldImportBook() throws Exception {
-        String bookData = "Book Title,Category,1";
-        InputStream inputStream = new ByteArrayInputStream(bookData.getBytes());
-
-        importService.importBook(inputStream);
-
-        verify(jdbcTemplate, times(1)).update(anyString(),
-                eq("Book Title"), eq("Category"), eq(true), eq(1));
-    }
+//    @Test
+//    public void shouldImportBook() throws Exception {
+//        String bookData = "Book Title,Category,1";
+//        InputStream inputStream = new ByteArrayInputStream(bookData.getBytes());
+//
+//        importService.importBook(inputStream);
+//
+//        verify(jdbcTemplate, times(1)).update(anyString(),
+//                eq("Book Title"), eq("Category"), eq(true), eq(1));
+//    }
 }

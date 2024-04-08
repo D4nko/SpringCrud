@@ -25,9 +25,10 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        // todo w kontrolerach zamienic repozytoria na seriwisy +
-        // testy serwisów dodać pozostałe metody
-        // sprobowac napisac testy do importu +
+        // dodac brakujace testy do metod, sprawdzic cvzy wszystko jest
+        // dodac metode w importService na updateToFail()
+
+
 
     }
 }

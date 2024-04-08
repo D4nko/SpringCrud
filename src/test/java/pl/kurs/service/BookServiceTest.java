@@ -77,4 +77,6 @@ public class BookServiceTest {
         assertEquals(book.isAvailable(), partiallyEditedBook.isAvailable());
     }
 
+
+
 }

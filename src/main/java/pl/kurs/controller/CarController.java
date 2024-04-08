@@ -16,6 +16,7 @@ import pl.kurs.model.dto.CarDto;
 import pl.kurs.repository.CarRepository;
 import pl.kurs.repository.GarageRepository;
 import pl.kurs.service.CarService;
+import pl.kurs.service.GarageService;
 
 import java.awt.print.Book;
 import java.util.List;
@@ -28,14 +29,9 @@ import java.util.Optional;
 public class CarController {
 
     private final CarRepository carService;
-    private final GarageRepository garageRepository;
 
     @PostConstruct
     public void init() {
-        garageRepository.saveAndFlush(new Garage(2, "Krotka", false));
-       garageRepository.saveAndFlush(new Garage(1, "Dluga", true));
-
-
         carService.saveAndFlush(new Car("BMW", "M3", "Pb"));
         carService.saveAndFlush(new Car("BMW", "5", "ON"));
     }
