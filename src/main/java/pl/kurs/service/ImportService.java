@@ -44,8 +44,8 @@ public class ImportService {
             reader.lines()
                     .parallel()
                     .map(line -> line.split(","))
-                    .peek(command -> countTime(counter, start)) // Side effect for timing
-                    .forEach(this::save); // Ensure this method exists and matches signature
+                    .peek(command -> countTime(counter, start))
+                    .forEach(this::save);
         } catch (IOException e) {
             e.printStackTrace();
         }
