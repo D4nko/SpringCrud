@@ -15,6 +15,7 @@ import pl.kurs.model.command.EditCarCommand;
 import pl.kurs.model.dto.CarDto;
 import pl.kurs.repository.CarRepository;
 import pl.kurs.repository.GarageRepository;
+import pl.kurs.service.CarService;
 
 import java.awt.print.Book;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CarController {
 
-    private final CarRepository carRepository;
+    private final CarRepository carService;
     private final GarageRepository garageRepository;
 
     @PostConstruct
@@ -35,48 +36,48 @@ public class CarController {
        garageRepository.saveAndFlush(new Garage(1, "Dluga", true));
 
 
-        carRepository.saveAndFlush(new Car("BMW", "M3", "Pb"));
-        carRepository.saveAndFlush(new Car("BMW", "5", "ON"));
+        carService.saveAndFlush(new Car("BMW", "M3", "Pb"));
+        carService.saveAndFlush(new Car("BMW", "5", "ON"));
     }
 
     @GetMapping
     public ResponseEntity<List<CarDto>> findAll() {
         log.info("findAll");
-        return ResponseEntity.ok(carRepository.findAll().stream().map(CarDto::from).toList());
+        return ResponseEntity.ok(carService.findAll().stream().map(CarDto::from).toList());
     }
 
     @PostMapping
     public ResponseEntity<CarDto> addCar(@RequestBody CreatCarCommand command) {
-        Car car = carRepository.saveAndFlush(new Car(command.getBrand(), command.getModel(), command.getFuelType()));
+        Car car = carService.saveAndFlush(new Car(command.getBrand(), command.getModel(), command.getFuelType()));
         return ResponseEntity.status(HttpStatus.CREATED).body(CarDto.from(car));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CarDto> findCar(@PathVariable int id) {
-        return ResponseEntity.ok(CarDto.from(carRepository.findById(id).orElseThrow(CarNotFoundException::new)));
+        return ResponseEntity.ok(CarDto.from(carService.findById(id).orElseThrow(CarNotFoundException::new)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CarDto> deleteCar(@PathVariable int id) {
-        carRepository.deleteById(id);
+        carService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CarDto> editCar(@PathVariable int id, @RequestBody EditCarCommand command) {
-        Car car = carRepository.findById(id).orElseThrow(CarNotFoundException::new);
+        Car car = carService.findById(id).orElseThrow(CarNotFoundException::new);
         car.setBrand(command.getBrand());
         car.setModel(command.getModel());
         car.setFuelType(command.getFuelType());
-        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carRepository.saveAndFlush(car)));
+        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carService.saveAndFlush(car)));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CarDto> editCarPartially(@PathVariable int id, @RequestBody EditCarCommand command) {
-        Car car = carRepository.findById(id).orElseThrow(CarNotFoundException::new);
+        Car car = carService.findById(id).orElseThrow(CarNotFoundException::new);
         Optional.ofNullable(command.getBrand()).ifPresent(car::setBrand);
         Optional.ofNullable(command.getFuelType()).ifPresent(car::setFuelType);
         Optional.ofNullable(command.getModel()).ifPresent(car::setModel);
-        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carRepository.saveAndFlush(car)));
+        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carService.saveAndFlush(car)));
     }
 }
