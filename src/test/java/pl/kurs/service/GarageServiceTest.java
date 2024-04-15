@@ -87,4 +87,62 @@ class GarageServiceTest {
         verify(carRepository, never()).findById(carId);
     }
 
+    @Test
+    public void shouldDeleteGarageById() {
+        int garageId = 1;
+        garageService.deleteById(garageId);
+        verify(garageRepository).deleteById(garageId);
+    }
+
+    @Test
+    public void shouldRemoveCarFromGarage() {
+        int garageId = 1;
+        int carId = 1;
+        Garage garage = new Garage(1, "ul. Testowa 1, Testowo", true);
+        Car car = new Car("BMW", "M2", "PB");
+        garage.addCar(car);
+        when(garageRepository.findById(garageId)).thenReturn(Optional.of(garage));
+        when(carRepository.findById(carId)).thenReturn(Optional.of(car));
+        garageService.removeCarFromGarage(garageId, carId);
+
+        assertFalse(garage.getCars().contains(car));
+        verify(garageRepository).findById(garageId);
+        verify(carRepository).findById(carId);
+        verify(garageRepository).saveAndFlush(any());
+    }
+
+    @Test
+    public void shouldAddCarToGarage() {
+        int garageId = 1;
+        int carId = 1;
+        Garage garage = new Garage(1, "ul. Testowa 1, Testowo", true);
+        Car car = new Car("BMW", "M2", "PB");
+        when(garageRepository.findById(garageId)).thenReturn(Optional.of(garage));
+        when(carRepository.findById(carId)).thenReturn(Optional.of(car));
+        garageService.addCarToGarage(garageId, carId);
+
+        assertTrue(garage.getCars().contains(car));
+        verify(garageRepository).findById(garageId);
+        verify(carRepository).findById(carId);
+        verify(garageRepository).saveAndFlush(any());
+    }
+
+    @Test
+    public void shouldEditGarage() {
+        int garageId = 1;
+        EditGarageCommand command = new EditGarageCommand();
+        command.setPlaces(50);
+        Garage garage = new Garage(1, "ul. Testowa 1, Testowo", true);
+        when(garageRepository.findByIdWithCars(garageId)).thenReturn(Optional.of(garage));
+        when(garageRepository.saveAndFlush(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Garage editedGarage = garageService.edit(garageId, command);
+
+        assertEquals(command.getAddress(), editedGarage.getAddress());
+        assertEquals(command.getPlaces(), editedGarage.getPlaces());
+        assertEquals(command.getIsLpgAllowed(), editedGarage.getLpgAllowed());
+        verify(garageRepository).findByIdWithCars(garageId);
+        verify(garageRepository).saveAndFlush(any());
+    }
+
+
 }

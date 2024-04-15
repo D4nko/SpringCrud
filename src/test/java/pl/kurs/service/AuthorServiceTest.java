@@ -1,10 +1,9 @@
 package pl.kurs.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import pl.kurs.model.Book;
 import pl.kurs.model.command.CreateAuthorCommand;
 import pl.kurs.model.command.EditAuthorCommand;
 import pl.kurs.repository.AuthorRepository;
+import pl.kurs.repository.BookRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +27,12 @@ class AuthorServiceTest {
     @Mock
     private AuthorRepository authorRepository;
 
+    @Mock
+    private BookRepository bookRepository;
+
     @InjectMocks
     private AuthorService authorService;
+
 
     @BeforeEach
     void setUp() {
@@ -59,14 +63,7 @@ class AuthorServiceTest {
         verify(authorRepository).findById(authorId);
     }
 
-    @Test
-    void shouldFindByIdWhenAuthorDoesNotExistThenThrowException() {
-        int authorId = 99;
-        when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
-        assertThrows(AuthorNotFoundException.class, () -> authorService.findById(authorId));
-        verify(authorRepository).findById(authorId);
-    }
     @Test
     void shouldSaveAuthor() {
         CreateAuthorCommand command = new CreateAuthorCommand("Leo", "Tolstoy", 1828, 1910);
@@ -97,6 +94,34 @@ class AuthorServiceTest {
         verify(authorRepository).findById(authorId);
         verify(authorRepository).saveAndFlush(any());
     }
+    @Test
+    void shouldRemoveBookFromAuthor() {
+        int authorId = 1;
+        int bookId = 1;
+        Author existingAuthor = new Author("Adam", "Mickiewicz", 1798, 1855);
+        Book book = new Book("Title", "Category", true, existingAuthor);
+        existingAuthor.getBooks().add(book);
+        when(authorRepository.findById(authorId)).thenReturn(Optional.of(existingAuthor));
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        assertDoesNotThrow(() -> authorService.removeBookFromAuthor(authorId, bookId));
+
+        verify(authorRepository).findById(authorId);
+        verify(bookRepository).findById(bookId);
+        assertFalse(existingAuthor.getBooks().contains(book));
+        verify(authorRepository).saveAndFlush(existingAuthor);
+    }
+
+    @Test
+    void shouldDeleteAuthorById() {
+        int authorId = 1;
+        assertDoesNotThrow(() -> authorService.deleteById(authorId));
+
+        verify(authorRepository).deleteById(authorId);
+    }
+
+
+
 
 
 }

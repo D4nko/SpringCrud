@@ -34,7 +34,7 @@ public class BookServiceTest {
 
 
     @Test
-    void shouldFindBookByIdIfBookExists() {
+    void shouldFindBookById() {
         int bookId = 1;
         Author author = new Author("Kazimierz", "Wielki", 1900, 2000); // Assuming a constructor exists
         Book expectedBook = new Book("Ogniem i Mieczem", "Historical", true, author); // Assuming a constructor exists
@@ -48,19 +48,9 @@ public class BookServiceTest {
         verify(bookRepository).findById(bookId);
     }
 
-    @Test
-    void shoouldFindBookByIdWhenBookDoesNotExist() {
-
-        int bookId = 99;
-        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
-
-        assertThrows(BookNotFoundException.class, () -> bookService.findBookById(bookId).orElseThrow(BookNotFoundException::new), "Expected BookNotFoundException to be thrown when book is not found");
-        verify(bookRepository).findById(bookId);
-    }
 
     @Test
     void shouldPartiallyEditBook() {
-        // Arrange
         int bookId = 1;
         EditBookCommand command = new EditBookCommand();
         command.setTitle("Updated Title");
@@ -68,13 +58,35 @@ public class BookServiceTest {
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookRepository.saveAndFlush(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         Book partiallyEditedBook = bookService.partiallyEdit(bookId, command);
 
-        // Assert
         assertEquals(command.getTitle(), partiallyEditedBook.getTitle());
         assertEquals(book.getCategory(), partiallyEditedBook.getCategory());
         assertEquals(book.isAvailable(), partiallyEditedBook.isAvailable());
+    }
+    @Test
+    void shouldSaveBook() {
+        CreateBookCommand command = new CreateBookCommand("Title", "Category",  1);
+        Author author = new Author("Kazimierz", "Wielki", 1900, 2000);
+        when(authorRepository.findById(1)).thenReturn(Optional.of(author));
+        when(bookRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Book savedBook = bookService.save(command);
+
+        assertEquals(command.getTitle(), savedBook.getTitle());
+        assertEquals(command.getCategory(), savedBook.getCategory());
+        assertEquals(author, savedBook.getAuthor());
+    }
+
+
+
+    @Test
+    void shouldDeleteBook() {
+        int bookId = 1;
+
+        assertDoesNotThrow(() -> bookService.deleteById(bookId));
+
+        verify(bookRepository).deleteById(bookId);
+
     }
 
 

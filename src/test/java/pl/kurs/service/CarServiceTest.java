@@ -105,4 +105,12 @@ class CarServiceTest {
         verify(carRepository).findById(carId);
         verify(carRepository).saveAndFlush(any());
     }
+
+    @Test
+    public void shouldDeleteCar(){
+        int carId = 1;
+        carService.deleById(carId);
+        verify(carRepository).deleteById(carId);
+
+    }
 }

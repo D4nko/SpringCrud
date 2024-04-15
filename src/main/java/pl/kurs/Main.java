@@ -26,7 +26,7 @@ public class Main {
 //        }
 
         // dodac brakujace testy do metod, sprawdzic cvzy wszystko jest
-        // dodac metode w importService na updateToFail()
+        // dodac metode w importService na updateToFail() -
 
 
 
