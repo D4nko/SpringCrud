@@ -40,7 +40,6 @@ public class ImportService {
         AtomicInteger counter = new AtomicInteger(0);
         AtomicLong start = new AtomicLong(System.currentTimeMillis());
 
-        // Correct way to create a stream from an InputStream
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             reader.lines()
 //                    .parallel()
@@ -83,6 +82,14 @@ public class ImportService {
         importStatusRepository.saveAndFlush(toUpdate);
 
     }
+
+    private void updateToFail(int id) {
+        ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
+        toUpdate.setFinishDate(LocalDateTime.now());
+        toUpdate.setStatus(ImportStatus.Status.FAILED);
+        importStatusRepository.saveAndFlush(toUpdate);
+    }
+
 
     public ImportStatus startImport(String fileName){
         return importStatusRepository.saveAndFlush(new ImportStatus(fileName));
