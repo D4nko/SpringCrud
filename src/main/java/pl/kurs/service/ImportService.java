@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ImportService {
     private static final String INSERT_BOOK_SQL = "insert into book(book_title, category, available, author_id) values (?,?,?,?)";
     private final JdbcTemplate jdbcTemplate;
-    private final ImportStatusRepository importStatusRepository;
+    private final ImportStatusFacade importStatusFacade;
 
     private void save(String[] args) {
         jdbcTemplate.update(INSERT_BOOK_SQL,
@@ -35,7 +35,7 @@ public class ImportService {
     @Transactional
     @Async("booksImportExecutor")
     public void importBook(InputStream inputStream, int id) {
-        updateToProcessing(id);
+        importStatusFacade.updateToProcessing(id);
 
         AtomicInteger counter = new AtomicInteger(0);
         AtomicLong start = new AtomicLong(System.currentTimeMillis());
@@ -45,61 +45,33 @@ public class ImportService {
                     .map(line -> line.split(","))
                     .peek(command -> countTime(counter, start, id))
                     .forEach(this::save);
-            updateToSuccess(id);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Import failed due to an IOException: {}", e.getMessage());
-            updateToFail(id);
+            importStatusFacade.updateToFail(id, e.getMessage(), counter.get());
             throw new RuntimeException("Import failed, see log for details.", e);
         }
 
-    }
+        importStatusFacade.updateToSuccess(id, counter.get());
 
+    }
 
     private void countTime(AtomicInteger counter, AtomicLong start, int id) {
         int progress = counter.incrementAndGet();
         if (progress % 10000 == 0) {
             log.info("Imported: {} in {} ms", counter, (System.currentTimeMillis() - start.get()));
             start.set(System.currentTimeMillis());
-            updateProgress(id, progress);
+            importStatusFacade.updateProgress(id, progress);
         }
-    }
-
-    private void updateToProcessing(int id) {
-        ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
-        toUpdate.setStartDate(LocalDateTime.now());
-        toUpdate.setStatus(ImportStatus.Status.PROCESSING);
-        importStatusRepository.saveAndFlush(toUpdate);
-    }
-
-    private void updateProgress(int id, int progress) {
-        ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
-        toUpdate.setProcessed(progress);
-        importStatusRepository.saveAndFlush(toUpdate);
-    }
-
-    private void updateToSuccess(int id) {
-        ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
-        toUpdate.setFinishDate(LocalDateTime.now());
-        toUpdate.setStatus(ImportStatus.Status.SUCCESS);
-        importStatusRepository.saveAndFlush(toUpdate);
-
-    }
-
-    private void updateToFail(int id) {
-        ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
-        toUpdate.setFinishDate(LocalDateTime.now());
-        toUpdate.setStatus(ImportStatus.Status.FAILED);
-        importStatusRepository.saveAndFlush(toUpdate);
     }
 
 
     public ImportStatus startImport(String fileName) {
-        return importStatusRepository.saveAndFlush(new ImportStatus(fileName));
+        return importStatusFacade.saveAndFlush(new ImportStatus(fileName));
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public ImportStatus findById(int id) {
-        return importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
+        return importStatusFacade.findById(id).orElseThrow(ImportStatusNotFoundException::new);
     }
 
 

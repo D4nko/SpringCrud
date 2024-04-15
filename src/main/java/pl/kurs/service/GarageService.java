@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.CarNotFoundException;
 import pl.kurs.exceptions.GarageNotFoundException;
@@ -71,7 +72,7 @@ public class GarageService {
         return garageRepository.saveAndFlush(garage);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public void addCarToGarage(int id, int carId) {
         Garage garage = garageRepository.findById(id).orElseThrow(GarageNotFoundException::new);
         Car car = carRepository.findById(carId).orElseThrow(CarNotFoundException::new);
@@ -85,6 +86,8 @@ public class GarageService {
         garage.remove(car);
         garageRepository.saveAndFlush(garage);
     }
+
+
 
 
 

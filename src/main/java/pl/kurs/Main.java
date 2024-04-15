@@ -25,8 +25,10 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        // dodac brakujace testy do metod, sprawdzic cvzy wszystko jest
-        // dodac metode w importService na updateToFail() -
+        // testy controlllera do importu
+        // testy statusow
+        // powtorka, chce zebyscie znali wszystkie adnotacje ktorych do tej pory uzywlismy, co robia po co sa
+
 
 
 
