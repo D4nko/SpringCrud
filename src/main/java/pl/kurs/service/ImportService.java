@@ -42,18 +42,17 @@ public class ImportService {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             reader.lines()
-//                    .parallel()
                     .map(line -> line.split(","))
                     .peek(command -> countTime(counter, start, id))
                     .forEach(this::save);
+            updateToSuccess(id);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Import failed due to an IOException: {}", e.getMessage());
+            updateToFail(id);
+            throw new RuntimeException("Import failed, see log for details.", e);
         }
 
-        updateToSuccess(id);
-
     }
-
 
 
     private void countTime(AtomicInteger counter, AtomicLong start, int id) {
@@ -64,17 +63,20 @@ public class ImportService {
             updateProgress(id, progress);
         }
     }
+
     private void updateToProcessing(int id) {
         ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
         toUpdate.setStartDate(LocalDateTime.now());
         toUpdate.setStatus(ImportStatus.Status.PROCESSING);
         importStatusRepository.saveAndFlush(toUpdate);
     }
+
     private void updateProgress(int id, int progress) {
         ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
         toUpdate.setProcessed(progress);
         importStatusRepository.saveAndFlush(toUpdate);
     }
+
     private void updateToSuccess(int id) {
         ImportStatus toUpdate = importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
         toUpdate.setFinishDate(LocalDateTime.now());
@@ -91,16 +93,14 @@ public class ImportService {
     }
 
 
-    public ImportStatus startImport(String fileName){
+    public ImportStatus startImport(String fileName) {
         return importStatusRepository.saveAndFlush(new ImportStatus(fileName));
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
-    public ImportStatus findById(int id){
+    public ImportStatus findById(int id) {
         return importStatusRepository.findById(id).orElseThrow(ImportStatusNotFoundException::new);
     }
-
-
 
 
 }
