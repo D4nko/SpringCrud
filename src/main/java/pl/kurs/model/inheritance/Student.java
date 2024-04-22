@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Student extends Person{
-
+    private final String type = "STUDENT";
     private int scholarship;
     @Column(name = "std_group")
     private String group;

@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Employee extends Person{
+    private final String type = "EMPLOYEE";
     private String position;
     private int salary;
 
