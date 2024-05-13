@@ -27,12 +27,12 @@ public class PersonService {
     public void init(){
         personRepository.saveAllAndFlush(
                 List.of(
-                        new Employee("A", 30, "programmer", 30000),
-                        new Employee("B", 25, "programmer", 25000),
-                        new Employee("V", 35, "programmer", 14000),
-                        new Student("X", 20, 1000, "1a"),
-                        new Student("T", 19, 500, "1a"),
-                        new Student("Z", 20, 0, "1b")
+                        new Employee("A", 30,"172836871263","programmer", 30000),
+                        new Employee("B", 25,"272836871263","programmer", 25000),
+                        new Employee("V", 35,"372836871263","programmer", 14000),
+                        new Student("X", 20,"472836871263", 1000, "1a"),
+                        new Student("T", 19,"572836871263", 500, "1a"),
+                        new Student("Z", 20,"672836871263", 0, "1b")
                 )
         );
     }
