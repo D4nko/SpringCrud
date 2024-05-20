@@ -30,11 +30,6 @@ public class CarController {
 
     private final CarRepository carService;
 
-    @PostConstruct
-    public void init() {
-        carService.saveAndFlush(new Car("BMW", "M3", "Pb"));
-        carService.saveAndFlush(new Car("BMW", "5", "ON"));
-    }
 
     @GetMapping
     public ResponseEntity<List<CarDto>> findAll() {

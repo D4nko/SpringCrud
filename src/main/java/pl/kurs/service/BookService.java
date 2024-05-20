@@ -34,13 +34,6 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final EntityManager entityManager;
 
-    @PostConstruct
-    public void init() {
-        Author a1 = authorRepository.saveAndFlush(new Author("Kazimierz", "Wileki", 1900, 2000));
-
-        bookRepository.saveAndFlush(new Book("W pustyni i w puszczy", "Powiesc", true, a1));
-        bookRepository.saveAndFlush(new Book("Ogniem i mieczem", "Powiesc", true, a1));
-    }
 
     public Page<Book> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable);

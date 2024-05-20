@@ -29,12 +29,6 @@ public class GarageService {
     private final CarRepository carRepository;
 
 
-    @PostConstruct
-    public void init() {
-        garageRepository.saveAndFlush(new Garage(50, "ul. Kolejowa 23, Warszawa", true));
-        garageRepository.saveAndFlush(new Garage(10, "ul. Tekturowa 3, Warszawa", false));
-    }
-
 
     @Transactional(readOnly = true)
     public List<Garage> findAll() {

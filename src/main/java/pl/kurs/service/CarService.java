@@ -27,11 +27,6 @@ public class CarService {
     private final CarRepository carRepository;
 
 
-    @PostConstruct
-    public void init() {
-        carRepository.saveAndFlush(new Car("BMW", "M2", "PB"));
-        carRepository.saveAndFlush(new Car("Ferarri", "F8", "PB"));
-    }
 
     public List<Car> findAll() {
         return carRepository.findAll();

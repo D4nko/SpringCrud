@@ -5,5 +5,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
+    <changeSet id="20240513-krzysiek-008" author="krzysiek">
+        <sql>
+            insert into author (id, birth_year, death_year, name, surname) values (default, 1900, 2000, 'Henryk', 'Kowalki');
+            insert into author (id, birth_year, death_year, name, surname) values (default, 1900, 2000, 'Anna', 'Puszka');
+
+            insert into book (id, author_id, available, category, book_title) values (default, (select id from author where name = 'Henryk' and surname = 'Kowalski'), true, 'LEKTURA', 'Jakas ksiazka1');
+            insert into book (id, author_id, available, category, book_title) values (default, (select id from author where name = 'Anna' and surname = 'Puszka'),  true, 'LEKTURA', 'Jakas ksiazka2');
+        </sql>
+    </changeSet>
+
 
 </databaseChangeLog>

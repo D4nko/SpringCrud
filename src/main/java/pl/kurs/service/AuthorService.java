@@ -21,11 +21,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
 
-    @PostConstruct
-    public void init() {
-        authorRepository.saveAndFlush(new Author("Adam", "Mickiewicz", 1798, 1855));
-        authorRepository.saveAndFlush(new Author("Henryk", "Sienkiewicz", 1846, 1916));
-    }
+
 
     public List<Author> findAll() {
         return authorRepository.findAll();
