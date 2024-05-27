@@ -2,12 +2,16 @@ package pl.kurs.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.AuthorNotFoundException;
 import pl.kurs.exceptions.BookNotFoundException;
 import pl.kurs.model.Author;
 import pl.kurs.model.command.CreateAuthorCommand;
 import pl.kurs.model.command.EditAuthorCommand;
+import pl.kurs.model.dto.AuthorDto;
 import pl.kurs.repository.AuthorRepository;
 import pl.kurs.repository.BookRepository;
 
@@ -21,7 +25,10 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
 
-
+    @Transactional(readOnly = true)
+    public Page<AuthorDto> getAllAuthorsWithBooks(Pageable pageable) {
+        return authorRepository.findAllWithBooks(pageable);
+    }
 
     public List<Author> findAll() {
         return authorRepository.findAll();
@@ -47,7 +54,8 @@ public class AuthorService {
         author.setDeathYear(command.getDeathDate());
         return authorRepository.saveAndFlush(author);
     }
-   public Author partiallyEdit(int id, EditAuthorCommand command) {
+
+    public Author partiallyEdit(int id, EditAuthorCommand command) {
         Author author = authorRepository.findById(id).orElseThrow(AuthorNotFoundException::new);
         Optional.ofNullable(command.getFirstName()).ifPresent(author::setName);
         Optional.ofNullable(command.getLastName()).ifPresent(author::setSurname);
@@ -67,5 +75,7 @@ public class AuthorService {
         author.getBooks().remove(bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new));
         authorRepository.saveAndFlush(author);
     }
+
+
 }
 

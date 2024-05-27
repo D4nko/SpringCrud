@@ -28,9 +28,14 @@ public class DataLoader {
         @PostConstruct
     public void init() {
         Author a1 = authorRepository.saveAndFlush(new Author("Kazimierz", "Wileki", 1900, 2000));
+        Author a2 = authorRepository.saveAndFlush(new Author("Janina", "Kowalska", 1900, 2000));
 
         bookRepository.saveAndFlush(new Book("W pustyni i w puszczy", "Powiesc", true, a1));
         bookRepository.saveAndFlush(new Book("Ogniem i mieczem", "Powiesc", true, a1));
+        bookRepository.saveAndFlush(new Book("Ogniem i mieczem", "Powiesc", true, a1));
+        bookRepository.saveAndFlush(new Book("Potop1", "Powiesc", true, a2));
+        bookRepository.saveAndFlush(new Book("Potop2" , "Powiesc", true, a2));
+        bookRepository.saveAndFlush(new Book("Potop3", "Powiesc", true, a2));
 
             carRepository.saveAndFlush(new Car("BMW", "M2", "PB"));
         carRepository.saveAndFlush(new Car("Ferarri", "F8", "PB"));

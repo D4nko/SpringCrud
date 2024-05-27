@@ -1,9 +1,11 @@
 package pl.kurs.model.dto;
 
-public record AuthorDto(int id, String firstName, String lastName, Integer birthDate, Integer deathDate) {
+import pl.kurs.model.Author;
 
-    public static AuthorDto from(pl.kurs.model.Author author) {
-        return new AuthorDto(author.getId(), author.getName(), author.getSurname(), author.getBirthYear(), author.getDeathYear());
-    }
+public record AuthorDto(int id, String name, String surname, Integer birthDate, Integer deathDate, Long amauntOfBooks) {
+
+//    public static AuthorDto from(Author author) {
+//        return new AuthorDto(author.getId(), author.getName(), author.getSurname(), author.getBirthYear(), author.getDeathYear(), author.getBooks().size());
+//    }
 
 }
