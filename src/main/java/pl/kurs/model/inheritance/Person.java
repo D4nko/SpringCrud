@@ -3,6 +3,9 @@ package pl.kurs.model.inheritance;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,17 +19,13 @@ public abstract class Person {
     private int id;
     private String name;
     private int age;
-    @Column(unique = true)
-    private String pesel;
+    private LocalDate dateOfBirth;
+    private String gender;
+    private String country;
+
 
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
-    }
-
-    public Person(String name, int age, String pesel) {
-        this.name = name;
-        this.age = age;
-        this.pesel = pesel;
     }
 }
