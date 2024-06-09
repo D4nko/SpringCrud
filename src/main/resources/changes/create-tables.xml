@@ -61,4 +61,18 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20240609-dominik-001" author="dominik">
+        <sql>
+            ALTER TABLE PERSON
+            ADD COLUMN date_of_birth DATE;
+
+            ALTER TABLE PERSON
+            ADD COLUMN gender VARCHAR (255);
+        </sql>
+    </changeSet>
+    <changeSet id="20240609-dominik-002" author="dominik">
+        <customChange class="pl.kurs.migration.PeselToBirthdateAndGenderChange"/>
+    </changeSet>
+
+
 </databaseChangeLog>

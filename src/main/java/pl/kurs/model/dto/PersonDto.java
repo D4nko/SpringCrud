@@ -3,6 +3,8 @@ package pl.kurs.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public abstract class PersonDto {
@@ -16,4 +18,5 @@ public abstract class PersonDto {
         this.name = name;
         this.age = age;
     }
+
 }
