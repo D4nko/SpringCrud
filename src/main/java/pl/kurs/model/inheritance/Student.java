@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -18,8 +18,8 @@ public class Student extends Person{
     @Column(name = "std_group")
     private String group;
 
-    public Student(String name, int age, String pesel, int scholarship, String group) {
-        super(name, age, pesel);
+    public Student(String name, int age, Date dateOfBirth, String gender, int scholarship, String group) {
+        super(name, age, dateOfBirth, gender);
         this.scholarship = scholarship;
         this.group = group;
     }
