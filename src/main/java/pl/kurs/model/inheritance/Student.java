@@ -23,4 +23,11 @@ public class Student extends Person{
         this.scholarship = scholarship;
         this.group = group;
     }
+
+
+    public Student(String name, int age, String pesel, int scholarship, String group) {
+        super(name, age, pesel);
+        this.scholarship = scholarship;
+        this.group = group;
+    }
 }

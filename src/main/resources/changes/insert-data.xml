@@ -15,5 +15,18 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20240513-krzysiek-009" author="krzysiek">
+        <sql>
+            insert into person (age, name, pesel, position, salary, type, dtype, id) values (32, 'Adam', '98121798766', 'DEVELOPER', 5000, 'EMPLOYEE', 'Employee', 1)
+        </sql>
+    </changeSet>
+    <changeSet id="20240513-krzysiek-010" author="krzysiek">
+        <sql>
+            insert into person (age, name, pesel, std_group, scholarship, type, dtype, id) values (19, 'Maria', '98061898765', '1a', 1000, 'STUDENT', 'Student', 2)
+        </sql>
+    </changeSet>
+
+
+
 
 </databaseChangeLog>

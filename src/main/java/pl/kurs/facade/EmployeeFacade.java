@@ -27,8 +27,6 @@ public class EmployeeFacade implements PersonFacade<Employee, EmployeeDto> {
         return new EmployeeDto(employee.getId(),
                 employee.getName(),
                 employee.getAge(),
-//                employee.getDateOfBirth(),
-//                employee.getGender(),
                 employee.getPosition(),
                 employee.getSalary());
     }

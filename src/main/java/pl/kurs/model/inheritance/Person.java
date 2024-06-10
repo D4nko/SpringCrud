@@ -3,7 +3,7 @@ package pl.kurs.model.inheritance;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
 
 
 @Getter
@@ -20,6 +20,7 @@ public abstract class Person {
     private int id;
     private String name;
     private int age;
+    private String pesel;
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
     @Column(name = "gender")
@@ -35,5 +36,12 @@ public abstract class Person {
         this.age = age;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+    }
+
+
+    public Person(String name, int age, String pesel) {
+        this.name = name;
+        this.age = age;
+        this.pesel = pesel;
     }
 }

@@ -27,8 +27,6 @@ public class StudentFacade implements PersonFacade<Student, StudentDto> {
         return new StudentDto(student.getId(),
                 student.getName(),
                 student.getAge(),
-//                student.getDateOfBirth(),
-//                student.getGender(),
                 student.getScholarship(),
                 student.getGroup());
     }

@@ -6,4 +6,5 @@
     <!-- Odniesienia do plików z definicjami zmian -->
     <include file="/changes/create-tables.xml"/>
     <include file="/changes/insert-data.xml"/>
+    <include file="/changes/changelog.xml"/>
 </databaseChangeLog>

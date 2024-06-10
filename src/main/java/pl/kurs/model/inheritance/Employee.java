@@ -21,5 +21,11 @@ public class Employee extends Person{
         this.position = position;
         this.salary = salary;
     }
+
+    public Employee(String name, int age, String pesel, String position, int salary) {
+        super(name, age, pesel);
+        this.position = position;
+        this.salary = salary;
+    }
 }
 
