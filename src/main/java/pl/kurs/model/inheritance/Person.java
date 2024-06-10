@@ -2,6 +2,7 @@ package pl.kurs.model.inheritance;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.kurs.dictionary.model.DictionaryValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,11 +22,21 @@ public abstract class Person {
     private int age;
     private LocalDate dateOfBirth;
     private String gender;
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private DictionaryValue country;
 
 
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    public Person(String name, int age, LocalDate dateOfBirth, String gender, DictionaryValue country) {
+        this.name = name;
+        this.age = age;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.country = country;
     }
 }

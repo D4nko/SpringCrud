@@ -1,9 +1,12 @@
 package pl.kurs.model.inheritance;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.kurs.dictionary.model.DictionaryValue;
 
 @Getter
 @Setter
@@ -11,10 +14,12 @@ import lombok.Setter;
 @Entity
 public class Employee extends Person{
     private final String type = "EMPLOYEE";
-    private String position;
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private DictionaryValue position;
     private int salary;
 
-    public Employee(String name, int age, String position, int salary) {
+    public Employee(String name, int age, DictionaryValue position, int salary) {
         super(name, age);
         this.position = position;
         this.salary = salary;
