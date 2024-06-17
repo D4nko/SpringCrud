@@ -12,10 +12,7 @@ import liquibase.resource.ResourceAccessor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import java.time.LocalDate;
 public class PeselToBirthdateAndGenderChange implements CustomTaskChange {
 
     @Override
@@ -28,7 +25,7 @@ public class PeselToBirthdateAndGenderChange implements CustomTaskChange {
                 while (resultSet.next()) {
                     int personId = resultSet.getInt("id");
                     String pesel = resultSet.getString("pesel");
-                    Date birthdate = parsePeselToBirthdate(pesel);
+                    LocalDate birthdate = parsePeselToBirthdate(pesel);
                     String gender = extractGenderFromPesel(pesel);
 
                     String updateSql = "UPDATE person SET date_of_birth = ?, gender = ? WHERE id = ?";
@@ -42,21 +39,37 @@ public class PeselToBirthdateAndGenderChange implements CustomTaskChange {
             } catch (SQLException e) {
                 throw new CustomChangeException("Error processing PESEL numbers.", e);
             }
-        } catch (DatabaseException | ParseException e) {
+        } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Date parsePeselToBirthdate(String pesel) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-        return dateFormat.parse(pesel.substring(0,6));
+    private LocalDate parsePeselToBirthdate(String pesel) {
+        int year = Integer.parseInt(pesel.substring(0, 2));
+        int month = Integer.parseInt(pesel.substring(2, 4));
+        int day = Integer.parseInt(pesel.substring(4, 6));
+        if (month >= 81 && month <= 92) {
+            year += 1800;
+            month -= 80;
+        } else if (month >= 1 && month <= 12) {
+            year += 1900;
+        } else if (month >= 21 && month <= 32) {
+            year += 2000;
+            month -= 20;
+        } else if (month >= 41 && month <= 52) {
+            year += 2100;
+            month -= 40;
+        } else if (month >= 61 && month <= 72) {
+            year += 2200;
+            month -= 60;
+        }
+        return LocalDate.of(year, month, day);
     }
 
     private String extractGenderFromPesel(String pesel) {
-    int genderDigit = Integer.parseInt(pesel.substring(9,10));
-    return (genderDigit % 2 == 0) ? "Female" : "Male";
+        int genderDigit = Integer.parseInt(pesel.substring(9, 10));
+        return (genderDigit % 2 == 0) ? "Female" : "Male";
     }
-
 
 
     @Override

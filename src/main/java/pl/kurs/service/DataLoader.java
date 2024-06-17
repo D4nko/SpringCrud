@@ -8,11 +8,7 @@ import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.model.Car;
 import pl.kurs.model.Garage;
-import pl.kurs.model.inheritance.Employee;
-import pl.kurs.model.inheritance.Student;
 import pl.kurs.repository.*;
-
-import java.util.List;
 
 @Service
 @Profile("no-liquibase")
@@ -48,7 +44,7 @@ public class DataLoader {
             garageRepository.saveAndFlush(new Garage(50, "ul. Kolejowa 23, Warszawa", true));
         garageRepository.saveAndFlush(new Garage(10, "ul. Tekturowa 3, Warszawa", false));
 
-            personRepository.saveAllAndFlush(
+/*            personRepository.saveAllAndFlush(
                 List.of(
                         new Employee("A", 30,"172836871263","programmer", 30000),
                         new Employee("B", 25,"272836871263","programmer", 25000),
@@ -57,7 +53,7 @@ public class DataLoader {
                         new Student("T", 19,"572836871263", 500, "1a"),
                         new Student("Z", 20,"672836871263", 0, "1b")
                 )
-        );
+        );*/
     }
 
 }

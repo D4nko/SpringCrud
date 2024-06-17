@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,16 +16,11 @@ public class Employee extends Person{
     private String position;
     private int salary;
 
-    public Employee(String name, int age, Date dateOfBirth, String gender, String position, int salary) {
+    public Employee(String name, int age, LocalDate dateOfBirth, String gender, String position, int salary) {
         super(name, age, dateOfBirth, gender);
         this.position = position;
         this.salary = salary;
     }
 
-    public Employee(String name, int age, String pesel, String position, int salary) {
-        super(name, age, pesel);
-        this.position = position;
-        this.salary = salary;
-    }
 }
 
