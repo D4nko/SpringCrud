@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.kurs.dictionary.model.DictionaryValue;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,5 +21,9 @@ public class Employee extends Person{
     private DictionaryValue position;
     private int salary;
 
-
+    public Employee(String name, int age, LocalDate dateOfBirth, String gender, DictionaryValue country, DictionaryValue position, int salary) {
+        super(name, age, dateOfBirth, gender, country);
+        this.position = position;
+        this.salary = salary;
+    }
 }

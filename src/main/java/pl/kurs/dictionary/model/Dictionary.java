@@ -25,6 +25,7 @@ public class Dictionary {
 
     @OneToMany(mappedBy = "dictionary", cascade = {CascadeType.PERSIST})
     private Set<DictionaryValue> values = new HashSet<>();
+    private boolean deleted;
 
     public Dictionary(String name) {
         this.name = name;

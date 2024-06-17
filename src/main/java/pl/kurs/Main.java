@@ -11,18 +11,5 @@ public class Main {
         SpringApplication.run(Main.class, args);
 
 
-
-        // zrobic migracje pesel na date urodzenia i plec
-        // wykorzystac CustomChangeTask
-        // zamienic gender ze stringa na enum, w bazie trzymamy jako String
-
-
-
-
-
-
-
-
-
     }
 }

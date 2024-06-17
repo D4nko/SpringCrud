@@ -1,14 +1,10 @@
 package pl.kurs.model.inheritance;
 
 import jakarta.persistence.*;
-import lombok.*;
-import pl.kurs.dictionary.model.DictionaryValue;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.kurs.dictionary.model.DictionaryValue;
 
 import java.time.LocalDate;
 
@@ -32,11 +28,6 @@ public abstract class Person {
     @JoinColumn(name = "country_id")
     private DictionaryValue country;
 
-
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
 
     public Person(String name, int age, LocalDate dateOfBirth, String gender, DictionaryValue country) {
         this.name = name;

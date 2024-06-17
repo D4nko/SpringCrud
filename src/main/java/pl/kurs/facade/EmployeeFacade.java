@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.repository.DictionaryValueRepository;
-import pl.kurs.model.PersonParameter;
 import pl.kurs.model.dto.EmployeeDto;
 import pl.kurs.model.inheritance.Employee;
 
-import java.util.List;
 import java.util.Map;
 
 @Component("employeeFacade")
@@ -21,7 +19,7 @@ public class EmployeeFacade implements PersonFacade<Employee, EmployeeDto> {
     @Override
     public Employee createPersonInternal(Map<String, String> parameters) {
         DictionaryValue countryValue = dictionaryValueRepository.findByDictionaryNameAndValue("COUNTRIES", parameters.get("country")).orElseThrow(() -> new IllegalStateException("MIssing dictionary value in COUNTRIES"));
-        DictionaryValue positionValue = dictionaryValueRepository.findByDictionaryNameAndValue("JOB_POSITION", parameters.get("position]")).orElseThrow(() -> new IllegalStateException("MIssing dictionary value in JOB_POSITION"));
+        DictionaryValue positionValue = dictionaryValueRepository.findByDictionaryNameAndValue("JOB_POSITION", parameters.get("position")).orElseThrow(() -> new IllegalStateException("MIssing dictionary value in JOB_POSITION"));
         Employee employee = new Employee();
         employee.setAge(Integer.parseInt(parameters.get("age")));
         employee.setSalary(Integer.parseInt(parameters.get("salary")));

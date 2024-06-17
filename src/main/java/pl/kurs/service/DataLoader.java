@@ -12,8 +12,6 @@ import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.model.Car;
 import pl.kurs.model.Garage;
-import pl.kurs.model.inheritance.Employee;
-import pl.kurs.model.inheritance.Student;
 import pl.kurs.repository.*;
 
 import java.util.List;
