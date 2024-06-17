@@ -14,6 +14,10 @@ public class Main {
 
         // zrobic migracje pesel na date urodzenia i plec
         // wykorzystac CustomChangeTask
+        // zamienic gender ze stringa na enum, w bazie trzymamy jako String
+
+
+
 
 
 

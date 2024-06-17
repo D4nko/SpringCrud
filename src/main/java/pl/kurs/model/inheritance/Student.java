@@ -23,6 +23,4 @@ public class Student extends Person{
         this.scholarship = scholarship;
         this.group = group;
     }
-
-
 }
