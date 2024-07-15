@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
-import pl.kurs.dictionary.model.command.CreateValueForictionaryCommand;
+import pl.kurs.dictionary.model.command.CreateValueForDictionaryCommand;
 import pl.kurs.dictionary.model.command.EditDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.service.DictionaryService;
@@ -34,8 +34,8 @@ public class DictionaryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dictionaryService.save(command));
     }
 
-    @PatchMapping("/{id}/values")
-    public ResponseEntity<DictionaryDto> addValuesToDictionary(@PathVariable int id, @RequestBody CreateValueForictionaryCommand command) {
+    @PostMapping("/{id}/values")
+    public ResponseEntity<DictionaryDto> addValuesToDictionary(@PathVariable int id, @RequestBody CreateValueForDictionaryCommand command) {
         log.info("addValuesToDictionary({}, {})", id, command);
         if(id != command.getDictionaryId()){
             throw new IllegalStateException("Id conflict");
@@ -68,7 +68,7 @@ public class DictionaryController {
     @DeleteMapping("/{id}/values/{valueId}")
     public ResponseEntity<Void> deleteValueFromDictionary(@PathVariable int id, @PathVariable int valueId) {
         log.info("deleteValueFromDictionary({}, {})", id, valueId);
-        dictionaryService.removeValue(id, valueId);
+        dictionaryService.removeValueFromDictionary(id, valueId);
         return ResponseEntity.ok().build();
     }
 }

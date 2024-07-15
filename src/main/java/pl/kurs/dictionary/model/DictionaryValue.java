@@ -5,12 +5,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"value", "dictionary"})
+@Where(clause = "deleted = false")
+//@SQLDelete(sql = "update dictionary_value set deleted = true where id = ?1")
 public class DictionaryValue {
 
     @Id
@@ -22,6 +25,7 @@ public class DictionaryValue {
     @ManyToOne
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
+    private boolean deleted;
 
     public DictionaryValue(String value, Dictionary dictionary) {
         this.value = value;

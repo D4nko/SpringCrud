@@ -1,6 +1,9 @@
 package pl.kurs.dictionary.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Session;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +16,10 @@ import pl.kurs.Main;
 import pl.kurs.dictionary.model.Dictionary;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
+import pl.kurs.dictionary.model.command.CreateValueForDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.repository.DictionaryRepository;
+import pl.kurs.dictionary.repository.DictionaryValueRepository;
 import pl.kurs.dictionary.service.DictionaryService;
 
 import java.util.HashSet;
@@ -40,6 +45,10 @@ class DictionaryControllerTest {
     private DictionaryService dictionaryService;
     @Autowired
     private DictionaryRepository dictionaryRepository;
+    @Autowired
+    private DictionaryValueRepository dictionaryValueRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     public void shouldSaveDictionary() throws Exception {
@@ -84,23 +93,38 @@ class DictionaryControllerTest {
     // napisac podobny test na usuwanie slownika razem z wartosciami
 
     @Test
-    public void shouldDeleteDictionaryEasy() throws Exception {
+    public void shouldDeleteDictionaryWithValues() throws Exception {
+        int id = dictionaryRepository.saveAndFlush(new Dictionary("toDelete")).getId();
 
         Set<String> testValues = Set.of("value1", "value2");
 
-        CreateDictionaryCommand testCommand = CreateDictionaryCommand.builder()
-                .name("dictionary to delete")
-                .initialValues(testValues)
+        CreateValueForDictionaryCommand testCommand = CreateValueForDictionaryCommand.builder()
+                .dictionaryId(id)
+                .values(testValues)
                 .build();
+        System.out.println("------------------ sekcja 0 ------------------------");
 
-        DictionaryDto savedDictionary = dictionaryService.save(testCommand);
+        String json = objectMapper.writeValueAsString(testCommand);
 
-        postman.perform(delete("/api/v1/dictionaries/" + savedDictionary.id())
-                        .contentType(MediaType.APPLICATION_JSON))
+        postman.perform(post("/api/v1/dictionaries/" + id + "/values")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated());
+        System.out.println("------------------ sekcja 1 ------------------------");
+        Dictionary beforeDeleted = dictionaryRepository.findByIdWithValues(id).get();
+        System.out.println("------------------ sekcja 2 ------------------------");
+        Session session = entityManager.unwrap(Session.class);
+        Statistics statistics = session.getSessionFactory().getStatistics();
+        // sprawdzcie czy sekcja 2 ma dokladnie 2 zapytania do bazy
+        postman.perform(delete("/api/v1/dictionaries/" + id))
                 .andExpect(status().isNoContent());
-
-        Assertions.assertTrue(dictionaryRepository.findById(savedDictionary.id()).isEmpty());
+        System.out.println("------------------ sekcja 3 ------------------------");
+        Assertions.assertFalse(dictionaryRepository.existsById(id));
+        beforeDeleted.getValues().stream().forEach(value -> Assertions.assertFalse(dictionaryValueRepository.existsById(value.getId())));
     }
+
+    // dodac test na edycje
+
 
     @Test
     public void shouldDeleteValueFromDictionary() throws Exception {
@@ -127,9 +151,5 @@ class DictionaryControllerTest {
         Dictionary dictionaryAfterDeletion = dictionaryAfterDeletionOpt.get();
         Assertions.assertFalse(dictionaryAfterDeletion.getValues().contains(valueToDelete), "Value should be removed from the dictionary");
     }
-
-
-
-
-    }
+}
 

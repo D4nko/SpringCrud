@@ -6,11 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.dictionary.model.Dictionary;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
-import pl.kurs.dictionary.model.command.CreateValueForictionaryCommand;
+import pl.kurs.dictionary.model.command.CreateValueForDictionaryCommand;
 import pl.kurs.dictionary.model.command.EditDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.repository.DictionaryRepository;
 import pl.kurs.dictionary.repository.DictionaryValueRepository;
+import pl.kurs.exceptions.DictionaryNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,14 +45,6 @@ public class DictionaryService {
     }
 
     @Transactional
-    public void deleteById(int id) {
-        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
-                .orElseThrow(() -> new RuntimeException("Dictionary not found"));
-        dictionary.setDeleted(true);
-        dictionaryRepository.save(dictionary);
-    }
-
-    @Transactional
     public DictionaryDto edit(int id, EditDictionaryCommand command) {
         Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
@@ -62,22 +55,22 @@ public class DictionaryService {
     }
 
     @Transactional
-    public DictionaryDto addValues(CreateValueForictionaryCommand command) {
+    public DictionaryDto addValues(CreateValueForDictionaryCommand command) {
         Dictionary dictionary = dictionaryRepository.findByIdWithValues(command.getDictionaryId())
-                .orElseThrow(() -> new RuntimeException("Dictionary not found"));
+                .orElseThrow(DictionaryNotFoundException::new);
         dictionary.addNewValues(command.getValues());
         Dictionary updatedDictionary = dictionaryRepository.save(dictionary);
         return DictionaryDto.from(updatedDictionary);
     }
 
     @Transactional
-    public void removeValue(int id, int valueId) {
-        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
-                .orElseThrow(() -> new RuntimeException("Dictionary not found"));
-        DictionaryValue value = dictionaryValueRepository.findById(valueId)
-                .orElseThrow(() -> new RuntimeException("Value not found"));
-        dictionary.getValues().remove(value);
-        dictionaryValueRepository.delete(value);
-        dictionaryRepository.save(dictionary);
+    public void deleteById(int id) {
+        dictionaryValueRepository.deleteByDictionary_id(id);
+        dictionaryRepository.deleteById2(id);
+    }
+
+    @Transactional
+    public void removeValueFromDictionary(int id, int valueId) {
+        dictionaryValueRepository.deleteById(valueId);
     }
 }

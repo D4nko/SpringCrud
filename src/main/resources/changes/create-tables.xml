@@ -112,10 +112,10 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2024-07-12-dominik" author="dominik">
+    <changeSet id="2024-07-12-dominik-00001" author="dominik">
         <sql>
             -- Create sequence for dictionary
-            CREATE SEQUENCE IF NOT EXISTS dictionary_seq START WITH 1000 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS dictionary_seq START WITH 1000 INCREMENT BY 100;
 
             -- Create dictionary table
             CREATE TABLE IF NOT EXISTS dictionary (
@@ -125,7 +125,7 @@
             );
 
             -- Create sequence for dictionary_value
-            CREATE SEQUENCE IF NOT EXISTS dictionary_value_seq START WITH 10000 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS dictionary_value_seq START WITH 10000 INCREMENT BY 100;
 
             -- Create dictionary_value table
             CREATE TABLE IF NOT EXISTS dictionary_value (

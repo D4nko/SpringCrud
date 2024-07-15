@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "name")
 @Where(clause = "deleted = false")
-@SQLDelete(sql = "update dictionary set deleted = true where id = ?1")
+//@SQLDelete(sql = "update dictionary set deleted = true where id = ?1")
 public class Dictionary {
 
     @Id
@@ -28,7 +28,7 @@ public class Dictionary {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "dictionary", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "dictionary", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<DictionaryValue> values = new HashSet<>();
     private boolean deleted = false;
 
