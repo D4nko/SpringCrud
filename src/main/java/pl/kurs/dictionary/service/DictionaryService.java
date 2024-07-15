@@ -38,14 +38,14 @@ public class DictionaryService {
 
     @Transactional(readOnly = true)
     public DictionaryDto findById(int id) {
-        Dictionary dictionary = dictionaryRepository.findActiveById(id)
+        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
         return DictionaryDto.from(dictionary);
     }
 
     @Transactional
     public void deleteById(int id) {
-        Dictionary dictionary = dictionaryRepository.findById(id)
+        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
         dictionary.setDeleted(true);
         dictionaryRepository.save(dictionary);
@@ -53,7 +53,7 @@ public class DictionaryService {
 
     @Transactional
     public DictionaryDto edit(int id, EditDictionaryCommand command) {
-        Dictionary dictionary = dictionaryRepository.findActiveById(id)
+        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
         dictionary.setName(command.getName());
         dictionary.setValues(command.getValues().stream().map(value -> new DictionaryValue(value, dictionary)).collect(Collectors.toSet()));
@@ -72,11 +72,12 @@ public class DictionaryService {
 
     @Transactional
     public void removeValue(int id, int valueId) {
-        Dictionary dictionary = dictionaryRepository.findActiveById(id)
+        Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
         DictionaryValue value = dictionaryValueRepository.findById(valueId)
                 .orElseThrow(() -> new RuntimeException("Value not found"));
         dictionary.getValues().remove(value);
+        dictionaryValueRepository.delete(value);
         dictionaryRepository.save(dictionary);
     }
 }

@@ -112,7 +112,31 @@
         </sql>
     </changeSet>
 
+    <changeSet id="2024-07-12-dominik" author="dominik">
+        <sql>
+            -- Create sequence for dictionary
+            CREATE SEQUENCE IF NOT EXISTS dictionary_seq START WITH 1000 INCREMENT BY 1;
 
+            -- Create dictionary table
+            CREATE TABLE IF NOT EXISTS dictionary (
+            id INT PRIMARY KEY,
+            name VARCHAR(255) UNIQUE NOT NULL,
+            deleted BOOLEAN DEFAULT FALSE NOT NULL
+            );
+
+            -- Create sequence for dictionary_value
+            CREATE SEQUENCE IF NOT EXISTS dictionary_value_seq START WITH 10000 INCREMENT BY 1;
+
+            -- Create dictionary_value table
+            CREATE TABLE IF NOT EXISTS dictionary_value (
+            id INT PRIMARY KEY,
+            dict_value VARCHAR(255) NOT NULL,
+            dictionary_id INT NOT NULL,
+            CONSTRAINT FK_DICTIONARY_VALUE_DICTIONARY FOREIGN KEY (dictionary_id)
+            REFERENCES dictionary(id)
+            );
+        </sql>
+    </changeSet>
 
 
 </databaseChangeLog>
