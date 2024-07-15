@@ -5,15 +5,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "name")
+@Where(clause = "deleted = false")
+@SQLDelete(sql = "update dictionary set deleted = true where id = ?1")
 public class Dictionary {
 
     @Id
@@ -29,5 +34,15 @@ public class Dictionary {
 
     public Dictionary(String name) {
         this.name = name;
+    }
+
+    public Dictionary(String name, Set<String> values) {
+        this.name = name;
+        this.values = values.stream().map(v -> new DictionaryValue(v, this)).collect(Collectors.toSet());
+    }
+
+
+    public void addNewValues(Set<String> values) {
+        this.values = values.stream().map(v -> new DictionaryValue(v, this)).collect(Collectors.toSet());
     }
 }

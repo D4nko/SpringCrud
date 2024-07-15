@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.dictionary.model.Dictionary;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
+import pl.kurs.dictionary.model.command.CreateValueForictionaryCommand;
 import pl.kurs.dictionary.model.command.EditDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.repository.DictionaryRepository;
@@ -31,10 +32,8 @@ public class DictionaryService {
 
     @Transactional
     public DictionaryDto save(CreateDictionaryCommand command) {
-        Dictionary dictionary = new Dictionary(command.getName());
-        command.getInitialValues().forEach(value -> dictionary.getValues().add(new DictionaryValue(value, dictionary)));
-        Dictionary savedDictionary = dictionaryRepository.save(dictionary);
-        return DictionaryDto.from(savedDictionary);
+        Dictionary toSave = dictionaryRepository.save(new Dictionary(command.getName(), command.getInitialValues()));
+        return DictionaryDto.from(toSave);
     }
 
     @Transactional(readOnly = true)
@@ -63,10 +62,10 @@ public class DictionaryService {
     }
 
     @Transactional
-    public DictionaryDto addValues(int id, CreateDictionaryCommand command) {
-        Dictionary dictionary = dictionaryRepository.findActiveById(id)
+    public DictionaryDto addValues(CreateValueForictionaryCommand command) {
+        Dictionary dictionary = dictionaryRepository.findByIdWithValues(command.getDictionaryId())
                 .orElseThrow(() -> new RuntimeException("Dictionary not found"));
-        command.getInitialValues().forEach(value -> dictionary.getValues().add(new DictionaryValue(value, dictionary)));
+        dictionary.addNewValues(command.getValues());
         Dictionary updatedDictionary = dictionaryRepository.save(dictionary);
         return DictionaryDto.from(updatedDictionary);
     }

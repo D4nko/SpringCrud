@@ -14,4 +14,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
 
     @Query("SELECT d FROM Dictionary d WHERE d.id = :id AND d.deleted = false")
     Optional<Dictionary> findActiveById(int id);
+
+    @Query("select d from Dictionary d left join fetch d.values where d.id = ?1")
+    Optional<Dictionary> findByIdWithValues(int dictionaryId);
 }

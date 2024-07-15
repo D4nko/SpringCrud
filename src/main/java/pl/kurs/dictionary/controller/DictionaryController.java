@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
+import pl.kurs.dictionary.model.command.CreateValueForictionaryCommand;
 import pl.kurs.dictionary.model.command.EditDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.service.DictionaryService;
@@ -30,8 +31,16 @@ public class DictionaryController {
     @PostMapping
     public ResponseEntity<DictionaryDto> addDictionary(@RequestBody CreateDictionaryCommand command) {
         log.info("addDictionary({})", command);
-        DictionaryDto dictionary = dictionaryService.save(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dictionary);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dictionaryService.save(command));
+    }
+
+    @PatchMapping("/{id}/values")
+    public ResponseEntity<DictionaryDto> addValuesToDictionary(@PathVariable int id, @RequestBody CreateValueForictionaryCommand command) {
+        log.info("addValuesToDictionary({}, {})", id, command);
+        if(id != command.getDictionaryId()){
+            throw new IllegalStateException("Id conflict");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(dictionaryService.addValues(command));
     }
 
     @GetMapping("/{id}")
@@ -41,13 +50,6 @@ public class DictionaryController {
         return ResponseEntity.ok(dictionary);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDictionary(@PathVariable int id) {
-        log.info("deleteDictionary({})", id);
-        dictionaryService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<DictionaryDto> editDictionary(@PathVariable int id, @RequestBody EditDictionaryCommand command) {
         log.info("editDictionary({}, {})", id, command);
@@ -55,12 +57,13 @@ public class DictionaryController {
         return ResponseEntity.status(HttpStatus.OK).body(dictionary);
     }
 
-    @PatchMapping("/{id}/values")
-    public ResponseEntity<DictionaryDto> addValuesToDictionary(@PathVariable int id, @RequestBody CreateDictionaryCommand command) {
-        log.info("addValuesToDictionary({}, {})", id, command);
-        DictionaryDto dictionary = dictionaryService.addValues(id, command);
-        return ResponseEntity.status(HttpStatus.OK).body(dictionary);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDictionary(@PathVariable int id) {
+        log.info("deleteDictionary({})", id);
+        dictionaryService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 
     @DeleteMapping("/{id}/values/{valueId}")
     public ResponseEntity<Void> deleteValueFromDictionary(@PathVariable int id, @PathVariable int valueId) {
