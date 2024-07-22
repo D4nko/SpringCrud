@@ -17,18 +17,20 @@ import pl.kurs.dictionary.model.Dictionary;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
 import pl.kurs.dictionary.model.command.CreateValueForDictionaryCommand;
+import pl.kurs.dictionary.model.command.EditDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.repository.DictionaryRepository;
 import pl.kurs.dictionary.repository.DictionaryValueRepository;
 import pl.kurs.dictionary.service.DictionaryService;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,15 +117,80 @@ class DictionaryControllerTest {
         System.out.println("------------------ sekcja 2 ------------------------");
         Session session = entityManager.unwrap(Session.class);
         Statistics statistics = session.getSessionFactory().getStatistics();
-        // sprawdzcie czy sekcja 2 ma dokladnie 2 zapytania do bazy
+        statistics.setStatisticsEnabled(true);
+        System.out.println("QUERY COUNT STATISTICS IS ENABLED: " + statistics.isStatisticsEnabled());
+        statistics.clear();
+
+        System.out.println("QUERY COUNT BEFORE METHOD EXECUTION: " + statistics.getQueries().length);
+        Assertions.assertEquals(0, statistics.getQueries().length);
         postman.perform(delete("/api/v1/dictionaries/" + id))
                 .andExpect(status().isNoContent());
+
+        String[] queries = statistics.getQueries();
+        System.out.println(Arrays.toString(queries));
+        System.out.println("QUERY COUNT AFTER METHOD EXECUTION: " + queries.length);
+        Assertions.assertEquals(2, queries.length);
         System.out.println("------------------ sekcja 3 ------------------------");
         Assertions.assertFalse(dictionaryRepository.existsById(id));
         beforeDeleted.getValues().stream().forEach(value -> Assertions.assertFalse(dictionaryValueRepository.existsById(value.getId())));
     }
 
     // dodac test na edycje
+    @Test
+    public void shouldEditDictionaryWithValues() throws Exception {
+
+        int id = dictionaryRepository.saveAndFlush(new Dictionary("toEdite")).getId();
+
+        Set<String> initialValues = Set.of("value1", "value2");
+
+        CreateValueForDictionaryCommand createCommand = CreateValueForDictionaryCommand.builder()
+                .dictionaryId(id)
+                .values(initialValues)
+                .build();
+
+        String createJson = objectMapper.writeValueAsString(createCommand);
+
+        postman.perform(post("/api/v1/dictionaries/" + id + "/values")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createJson))
+                .andExpect(status().isCreated());
+
+
+        Set<String> updatedValues = Set.of("value3", "value4");
+
+        EditDictionaryCommand updateCommand = EditDictionaryCommand.builder()
+                .name("updatedName")
+                .values(updatedValues)
+                .build();
+
+        String updateJson = objectMapper.writeValueAsString(updateCommand);
+
+        postman.perform(put("/api/v1/dictionaries/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("updatedName"))
+                .andExpect(jsonPath("$.values", hasSize(2)))
+                .andExpect(jsonPath("$.values", containsInAnyOrder("value3", "value4")));
+
+
+        Dictionary updatedDictionary = dictionaryRepository.findByIdWithValues(id).get();
+
+        Assertions.assertEquals("updatedName", updatedDictionary.getName());
+
+        Set<String> updatedValuesSet = new HashSet<>();
+        for (DictionaryValue dictionaryValue : updatedDictionary.getValues()) {
+            updatedValuesSet.add(dictionaryValue.getValue());
+        }
+
+        Assertions.assertTrue(updatedValuesSet.contains("value3"));
+        Assertions.assertTrue(updatedValuesSet.contains("value4"));
+        Assertions.assertTrue(updatedValuesSet.contains("value1"));
+        Assertions.assertTrue(updatedValuesSet.contains("value2"));
+    }
+
+
+
 
 
     @Test

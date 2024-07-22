@@ -44,6 +44,10 @@ public class DictionaryService {
         return DictionaryDto.from(dictionary);
     }
 
+    // zmiana endpointa, ustawic edycje dla pojedynczego value w slowniku, edytowanie pojedynczego dictionary_value
+
+
+    // poprawic endpoint, zeby nie dodawało nowych dictionary value, tylko zamieniało stare na nowe
     @Transactional
     public DictionaryDto edit(int id, EditDictionaryCommand command) {
         Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
