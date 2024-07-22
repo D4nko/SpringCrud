@@ -24,5 +24,11 @@
       <dropColumn tableName="person" columnName="pesel"/>
     </changeSet>
 
+    <changeSet id="2024-07-22-add-verion" author="krzysiek">
+        <addColumn tableName="book">
+            <column name="version" defaultValue="0" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

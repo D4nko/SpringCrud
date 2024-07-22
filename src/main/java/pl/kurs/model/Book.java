@@ -27,11 +27,23 @@ public class Book {
     @JoinColumn(name = "author_id")
     private Author author;
 
+    @Version
+    private long version;
+
     public Book(String title, String category, boolean available, Author author) {
         this.title = title;
         this.category = category;
         this.available = available;
         this.author = author;
 //        author.getBooks().add(this);
+    }
+
+    public Book(Book book) {
+        this.id = book.getId();
+        this.title = book.getTitle();
+        this.category = book.getCategory();
+        this.available = book.isAvailable();
+        this.author = book.getAuthor();
+        this.version = book.getVersion();
     }
 }

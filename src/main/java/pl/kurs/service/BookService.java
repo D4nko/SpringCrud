@@ -51,12 +51,15 @@ public class BookService {
         return bookRepository.save(new Book(command.getTitle(), command.getCategory(), true, authorRepository.findById(command.getAuthorId()).orElseThrow(AuthorNotFoundException::new)));
     }
 
+    @Transactional
     public Book edit(int id, EditBookCommand command) {
         Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
-        book.setTitle(command.getTitle());
-        book.setCategory(command.getCategory());
-        book.setAvailable(command.getAvailable());
-        return bookRepository.saveAndFlush(book);
+        Book copy = new Book(book);
+        copy.setTitle(command.getTitle());
+        copy.setCategory(command.getCategory());
+        copy.setAvailable(command.getAvailable());
+        copy.setVersion(command.getVersion());
+        return bookRepository.saveAndFlush(copy);
     }
 
     public Book partiallyEdit(int id, EditBookCommand command) {
