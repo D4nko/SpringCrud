@@ -4,31 +4,54 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-        <changeSet id="20240609-dominik-001" author="dominik">
-            <sql>
-                ALTER TABLE PERSON
-                    ADD COLUMN date_of_birth DATE;
+    <changeSet id="20240609-dominik-001" author="dominik">
+        <sql>
+            ALTER TABLE person ADD COLUMN date_of_birth DATE;
+            ALTER TABLE person ADD COLUMN gender VARCHAR(255);
+        </sql>
+    </changeSet>
 
-                ALTER TABLE PERSON
-                    ADD COLUMN gender VARCHAR(255);
-            </sql>
-        </changeSet>
-
-
-        <changeSet id="20240609-dominik-002" author="dominik">
-            <customChange class="pl.kurs.migration.PeselToBirthdateAndGenderChange"/>
-        </changeSet>
-
+    <changeSet id="20240609-dominik-002" author="dominik">
+        <customChange class="pl.kurs.migration.PeselToBirthdateAndGenderChange"/>
+    </changeSet>
 
     <changeSet id="20240610-dominik-001" author="dominik">
-      <dropColumn tableName="person" columnName="pesel"/>
+        <sql>
+            ALTER TABLE person DROP COLUMN pesel;
+        </sql>
     </changeSet>
 
-    <changeSet id="2024-07-22-add-verion" author="krzysiek">
-        <addColumn tableName="book">
-            <column name="version" defaultValue="0" type="BIGINT"/>
-        </addColumn>
+    <changeSet id="2024-07-22-add-country-id" author="krzysiek">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="person" columnName="country_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE person ADD COLUMN country_id INT;
+        </sql>
     </changeSet>
 
+    <changeSet id="2024-07-22-add-version" author="krzysiek">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="book" columnName="version"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE book ADD COLUMN version BIGINT DEFAULT 0;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-07-29-add-position-id" author="dominik">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="person" columnName="position_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE person ADD COLUMN position_id INT;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
