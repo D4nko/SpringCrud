@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.kurs.exceptions.CarNotFoundException;
 import pl.kurs.model.Car;
 import pl.kurs.model.command.CreatCarCommand;
 import pl.kurs.model.command.EditCarCommand;

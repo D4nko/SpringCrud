@@ -14,7 +14,6 @@ import pl.kurs.repository.CarRepository;
 import pl.kurs.service.CarService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/cars")

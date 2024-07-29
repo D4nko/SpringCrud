@@ -12,11 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.kurs.Main;
 import pl.kurs.model.Car;
-import pl.kurs.model.Garage;
 import pl.kurs.model.command.CreatCarCommand;
 import pl.kurs.model.command.EditCarCommand;
 import pl.kurs.repository.CarRepository;
-import pl.kurs.repository.GarageRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
