@@ -11,6 +11,8 @@ public class Main {
         SpringApplication.run(Main.class, args);
 
 
-
+//        dodac optimistic locka w jeszcze jednej klasie
+// sprawdzxic czy dziala poprawnie, przetestowac
+        // uporządkować sytuacje z liquibase
     }
 }
