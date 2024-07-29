@@ -32,7 +32,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2024-07-22-add-version" author="krzysiek">
+    <changeSet id="2024-07-22-add-version" author="dominik">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="book" columnName="version"/>
@@ -53,5 +53,17 @@
             ALTER TABLE person ADD COLUMN position_id INT;
         </sql>
     </changeSet>
+
+    <changeSet id="2024-07-29-add-version-to-car" author="dominik">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="car" columnName="version"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE car ADD COLUMN version BIGINT DEFAULT 0;
+        </sql>
+    </changeSet>
+
 
 </databaseChangeLog>

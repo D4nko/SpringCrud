@@ -74,6 +74,7 @@ public class CarControllerTest {
         updatedCommand.setBrand("UpdatedBrand");
         updatedCommand.setModel("UpdatedModel");
         updatedCommand.setFuelType("UpdatedFuelType");
+        updatedCommand.setVersion(0L);
         String json = objectMapper.writeValueAsString(updatedCommand);
 
         // When & Then
@@ -84,7 +85,8 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.id").value(car.getId()))
                 .andExpect(jsonPath("$.brand").value("UpdatedBrand"))
                 .andExpect(jsonPath("$.model").value("UpdatedModel"))
-                .andExpect(jsonPath("$.fuelType").value("UpdatedFuelType"));
+                .andExpect(jsonPath("$.fuelType").value("UpdatedFuelType"))
+                .andExpect(jsonPath("$.version").value(1));
 
         // Assert
         Car updatedCar = carRepository.findById(car.getId()).get();
@@ -92,7 +94,9 @@ public class CarControllerTest {
         Assertions.assertEquals("UpdatedBrand", updatedCar.getBrand());
         Assertions.assertEquals("UpdatedModel", updatedCar.getModel());
         Assertions.assertEquals("UpdatedFuelType", updatedCar.getFuelType());
+        Assertions.assertEquals(1, updatedCar.getVersion());
     }
+
 
     @Test
     void shouldRetrieveCar() throws Exception {
