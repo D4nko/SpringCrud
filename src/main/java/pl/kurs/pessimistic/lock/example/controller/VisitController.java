@@ -17,8 +17,9 @@ public class VisitController {
 
     private final VisitService visitService;
 
+
     @PostMapping
-    public ResponseEntity<Void> createVisit(@RequestBody CreateVisitCommand command){
+    public ResponseEntity<Void> createVisit(@RequestBody CreateVisitCommand command) {
         try {
             visitService.createVisit(command);
             return new ResponseEntity<>(HttpStatus.CREATED);
