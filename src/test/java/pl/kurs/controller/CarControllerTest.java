@@ -12,11 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.kurs.Main;
 import pl.kurs.model.Car;
-import pl.kurs.model.Garage;
 import pl.kurs.model.command.CreatCarCommand;
 import pl.kurs.model.command.EditCarCommand;
 import pl.kurs.repository.CarRepository;
-import pl.kurs.repository.GarageRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,6 +72,7 @@ public class CarControllerTest {
         updatedCommand.setBrand("UpdatedBrand");
         updatedCommand.setModel("UpdatedModel");
         updatedCommand.setFuelType("UpdatedFuelType");
+        updatedCommand.setVersion(0L);
         String json = objectMapper.writeValueAsString(updatedCommand);
 
         // When & Then
@@ -84,7 +83,8 @@ public class CarControllerTest {
                 .andExpect(jsonPath("$.id").value(car.getId()))
                 .andExpect(jsonPath("$.brand").value("UpdatedBrand"))
                 .andExpect(jsonPath("$.model").value("UpdatedModel"))
-                .andExpect(jsonPath("$.fuelType").value("UpdatedFuelType"));
+                .andExpect(jsonPath("$.fuelType").value("UpdatedFuelType"))
+                .andExpect(jsonPath("$.version").value(1));
 
         // Assert
         Car updatedCar = carRepository.findById(car.getId()).get();
@@ -92,7 +92,9 @@ public class CarControllerTest {
         Assertions.assertEquals("UpdatedBrand", updatedCar.getBrand());
         Assertions.assertEquals("UpdatedModel", updatedCar.getModel());
         Assertions.assertEquals("UpdatedFuelType", updatedCar.getFuelType());
+        Assertions.assertEquals(1, updatedCar.getVersion());
     }
+
 
     @Test
     void shouldRetrieveCar() throws Exception {

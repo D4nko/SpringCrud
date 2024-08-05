@@ -1,26 +1,19 @@
 package pl.kurs.controller;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.exceptions.CarNotFoundException;
-import pl.kurs.exceptions.ResourceNotFoundException;
 import pl.kurs.model.Car;
-import pl.kurs.model.Garage;
 import pl.kurs.model.command.CreatCarCommand;
 import pl.kurs.model.command.EditCarCommand;
 import pl.kurs.model.dto.CarDto;
 import pl.kurs.repository.CarRepository;
-import pl.kurs.repository.GarageRepository;
 import pl.kurs.service.CarService;
-import pl.kurs.service.GarageService;
 
-import java.awt.print.Book;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/cars")
@@ -29,7 +22,7 @@ import java.util.Optional;
 public class CarController {
 
     private final CarRepository carService;
-
+    private final CarService cs;
 
     @GetMapping
     public ResponseEntity<List<CarDto>> findAll() {
@@ -56,19 +49,13 @@ public class CarController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CarDto> editCar(@PathVariable int id, @RequestBody EditCarCommand command) {
-        Car car = carService.findById(id).orElseThrow(CarNotFoundException::new);
-        car.setBrand(command.getBrand());
-        car.setModel(command.getModel());
-        car.setFuelType(command.getFuelType());
-        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carService.saveAndFlush(car)));
+        Car car = cs.edit(id, command);
+        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(car));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CarDto> editCarPartially(@PathVariable int id, @RequestBody EditCarCommand command) {
-        Car car = carService.findById(id).orElseThrow(CarNotFoundException::new);
-        Optional.ofNullable(command.getBrand()).ifPresent(car::setBrand);
-        Optional.ofNullable(command.getFuelType()).ifPresent(car::setFuelType);
-        Optional.ofNullable(command.getModel()).ifPresent(car::setModel);
-        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(carService.saveAndFlush(car)));
+        Car car = cs.partiallyEdit(id, command);
+        return ResponseEntity.status(HttpStatus.OK).body(CarDto.from(car));
     }
 }
