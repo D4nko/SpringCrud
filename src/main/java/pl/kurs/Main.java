@@ -11,6 +11,8 @@ public class Main {
         SpringApplication.run(Main.class, args);
 
 
+// https://spring.io/guides/gs/rest-hateoas
 
+       //  nastepne zajecia pokazac przyklad przechowywania w cach
     }
 }

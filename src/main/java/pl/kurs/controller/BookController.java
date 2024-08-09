@@ -1,5 +1,6 @@
 package pl.kurs.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "get book with id")
     public ResponseEntity<BookDto> findBook(@PathVariable int id) {
         return ResponseEntity.ok(BookDto.from(bookService.findById(id).orElseThrow(BookNotFoundException::new)));
     }
