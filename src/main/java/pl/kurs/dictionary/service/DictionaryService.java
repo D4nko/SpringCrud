@@ -1,6 +1,8 @@
 package pl.kurs.dictionary.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.dictionary.model.Dictionary;
@@ -38,9 +40,11 @@ public class DictionaryService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "dictionaries", key = "#id")
     public DictionaryDto findById(int id) {
+        System.out.println("odpalam metode");
         Dictionary dictionary = dictionaryRepository.findByIdWithValues(id)
-                .orElseThrow(() -> new RuntimeException("Dictionary not found"));
+                .orElseThrow(DictionaryNotFoundException::new);
         return DictionaryDto.from(dictionary);
     }
 
@@ -68,6 +72,7 @@ public class DictionaryService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionaries", key = "#id")
     public void deleteById(int id) {
         dictionaryValueRepository.deleteByDictionary_id(id);
         dictionaryRepository.deleteById2(id);

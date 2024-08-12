@@ -1,4 +1,4 @@
-package pl.kurs.facade;
+package pl.kurs.model.inheritance.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

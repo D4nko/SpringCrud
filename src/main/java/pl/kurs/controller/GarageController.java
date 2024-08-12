@@ -9,6 +9,7 @@ import pl.kurs.exceptions.GarageNotFoundException;
 import pl.kurs.model.Garage;
 import pl.kurs.model.command.CreateGarageCommand;
 import pl.kurs.model.command.EditGarageCommand;
+import pl.kurs.model.dto.FullGarageDto;
 import pl.kurs.model.dto.GarageDto;
 import pl.kurs.service.GarageService;
 
@@ -36,9 +37,9 @@ public class GarageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(GarageDto.from(garage));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<GarageDto> findGarage(@PathVariable int id) {
+    public ResponseEntity<FullGarageDto> findGarage(@PathVariable int id) {
         log.info("findGarage({})", id);
-        return ResponseEntity.ok(GarageDto.from(garageService.findById(id).orElseThrow(GarageNotFoundException::new)));
+        return ResponseEntity.ok(FullGarageDto.from(garageService.findById(id).orElseThrow(GarageNotFoundException::new)));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GarageDto> deleteGarage(@PathVariable int id) {

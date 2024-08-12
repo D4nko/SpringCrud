@@ -1,17 +1,14 @@
-package pl.kurs.service;
+package pl.kurs.model.inheritance.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kurs.facade.PersonFacade;
+import pl.kurs.model.inheritance.Employee;
+import pl.kurs.model.inheritance.facade.PersonFacade;
 import pl.kurs.model.command.CreatePersonCommand;
 import pl.kurs.model.dto.PersonDto;
-import pl.kurs.model.inheritance.Employee;
 import pl.kurs.model.inheritance.Person;
-import pl.kurs.model.inheritance.Student;
-import pl.kurs.repository.PersonRepository;
+import pl.kurs.model.inheritance.repository.PersonRepository;
 
 import java.util.List;
 import java.util.Map;

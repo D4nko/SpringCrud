@@ -1,4 +1,4 @@
-package pl.kurs.repository;
+package pl.kurs.model.inheritance.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

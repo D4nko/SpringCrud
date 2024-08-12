@@ -1,16 +1,12 @@
-package pl.kurs.controller;
+package pl.kurs.model.inheritance.controller;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.model.command.CreatePersonCommand;
 import pl.kurs.model.dto.PersonDto;
-import pl.kurs.model.inheritance.Employee;
-import pl.kurs.model.inheritance.Person;
-import pl.kurs.model.inheritance.Student;
-import pl.kurs.repository.PersonRepository;
-import pl.kurs.service.PersonService;
+import pl.kurs.model.inheritance.service.PersonService;
 
 import java.util.List;
 
@@ -28,7 +24,7 @@ public class PersonController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonDto addPerson(@RequestBody CreatePersonCommand command){
+    public PersonDto addPerson(@RequestBody @Valid CreatePersonCommand command){
         return personService.createPerson(command);
     }
 }

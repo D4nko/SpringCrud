@@ -1,4 +1,4 @@
-package pl.kurs.facade;
+package pl.kurs.model.inheritance.facade;
 
 import pl.kurs.model.PersonParameter;
 import pl.kurs.model.dto.PersonDto;
