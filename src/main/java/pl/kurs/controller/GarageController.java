@@ -26,51 +26,43 @@ public class GarageController {
 
     @GetMapping
     public ResponseEntity<List<GarageDto>> findAll() {
-        log.info("findAll()");
         return ResponseEntity.ok(garageService.findAll().stream().map(GarageDto::from).toList());
     }
 
     @PostMapping
     public ResponseEntity<GarageDto> addGarage(@RequestBody CreateGarageCommand command) {
-        log.info("addGarage({})", command);
         Garage garage = garageService.save(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(GarageDto.from(garage));
     }
     @GetMapping("/{id}")
     public ResponseEntity<FullGarageDto> findGarage(@PathVariable int id) {
-        log.info("findGarage({})", id);
         return ResponseEntity.ok(FullGarageDto.from(garageService.findById(id).orElseThrow(GarageNotFoundException::new)));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GarageDto> deleteGarage(@PathVariable int id) {
-        log.info("deleteGarage({})", id);
         garageService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @PutMapping("/{id}")
     public ResponseEntity<GarageDto> editGarage(@PathVariable int id, @RequestBody EditGarageCommand command) {
-        log.info("editGarage({}, {})", id, command);
         Garage garage = garageService.edit(id, command);
         return ResponseEntity.status(HttpStatus.OK).body(GarageDto.from(garage));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<GarageDto> editGaragePartially(@PathVariable int id, @RequestBody EditGarageCommand command) {
-        log.info("editGaragePartially({}, {})", id, command);
         Garage garage = garageService.partiallyEdit(id, command);
         return ResponseEntity.status(HttpStatus.OK).body(GarageDto.from(garage));
     }
 
     @PatchMapping("/{id}/cars/{carId}")
     public ResponseEntity<GarageDto> addCarToGarage(@PathVariable int id, @PathVariable int carId) {
-        log.info("addCarToGarage({}, {})", id, carId);
         garageService.addCarToGarage(id, carId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/cars/{carId}")
     public ResponseEntity<GarageDto> deleteCarFromGarage(@PathVariable int id, @PathVariable int carId) {
-        log.info("deleteCatFromGarage({}, {})", id, carId);
         garageService.removeCarFromGarage(id, carId);
         return ResponseEntity.ok().build();
     }

@@ -26,4 +26,25 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20240817-dominik-002" author="dominik">
+        <sql>
+            INSERT INTO garage (id, places, address, lpg_allowed) VALUES (DEFAULT, 10, '123 Main St, Springfield', true);
+            INSERT INTO garage (id, places, address, lpg_allowed) VALUES (DEFAULT, 8, '456 Elm St, Springfield', false);
+            INSERT INTO garage (id, places, address, lpg_allowed) VALUES (DEFAULT, 15, '789 Oak St, Shelbyville', true);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20240817-dominik-003" author="dominik">
+        <sql>
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Toyota', 'Corolla', 'Gasoline', (SELECT id FROM garage WHERE address = '123 Main St, Springfield'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Honda', 'Civic', 'Diesel', (SELECT id FROM garage WHERE address = '123 Main St, Springfield'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Ford', 'Mustang', 'Gasoline', (SELECT id FROM garage WHERE address = '123 Main St, Springfield'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Chevrolet', 'Camaro', 'Gasoline', (SELECT id FROM garage WHERE address = '456 Elm St, Springfield'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Tesla', 'Model S', 'Electric', (SELECT id FROM garage WHERE address = '456 Elm St, Springfield'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'BMW', 'X5', 'Diesel', (SELECT id FROM garage WHERE address = '789 Oak St, Shelbyville'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Audi', 'A4', 'Gasoline', (SELECT id FROM garage WHERE address = '789 Oak St, Shelbyville'));
+            INSERT INTO car (id, brand_name, model, fuel_type, garage_id) VALUES (DEFAULT, 'Mercedes', 'C-Class', 'Gasoline', (SELECT id FROM garage WHERE address = '789 Oak St, Shelbyville'));
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

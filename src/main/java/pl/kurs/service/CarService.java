@@ -1,12 +1,15 @@
 package pl.kurs.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.CarNotFoundException;
 import pl.kurs.model.Car;
 import pl.kurs.model.command.CreatCarCommand;
 import pl.kurs.model.command.EditCarCommand;
+import pl.kurs.model.dto.FullCarDto;
 import pl.kurs.repository.CarRepository;
 import java.util.List;
 import java.util.Optional;
@@ -50,5 +53,11 @@ public class CarService {
         Optional.ofNullable(command.getFuelType()).ifPresent(car::setFuelType);
         Optional.ofNullable(command.getModel()).ifPresent(car::setModel);
         return carRepository.saveAndFlush(car);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<FullCarDto> getCarsByGarageId(int garageId, Pageable pageable) {
+        return carRepository.findCarsByGarageId(garageId, pageable)
+                .map(FullCarDto::from);
     }
 }

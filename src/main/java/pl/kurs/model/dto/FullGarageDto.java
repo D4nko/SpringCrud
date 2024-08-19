@@ -4,7 +4,6 @@ package pl.kurs.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import pl.kurs.controller.GarageController;
 import pl.kurs.model.Garage;
 
@@ -26,7 +25,6 @@ public class FullGarageDto extends RepresentationModel<FullGarageDto> {
         FullGarageDto fullGarageDto = new FullGarageDto(garage.getId(), garage.getPlaces(), garage.getAddress(), garage.getLpgAllowed(), garage.getCars().size());
 
         fullGarageDto.add(linkTo(methodOn(GarageController.class).findGarage(fullGarageDto.id)).withRel("Link to Garage"));
-
         return fullGarageDto;
     }
 }

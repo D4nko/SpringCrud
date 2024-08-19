@@ -1,11 +1,8 @@
 package pl.kurs.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.CarNotFoundException;
@@ -80,8 +77,6 @@ public class GarageService {
         garage.remove(car);
         garageRepository.saveAndFlush(garage);
     }
-
-
 
 
 
