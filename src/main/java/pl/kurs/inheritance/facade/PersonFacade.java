@@ -1,8 +1,8 @@
-package pl.kurs.model.inheritance.facade;
+package pl.kurs.inheritance.facade;
 
 import pl.kurs.model.PersonParameter;
-import pl.kurs.model.dto.PersonDto;
-import pl.kurs.model.inheritance.Person;
+import pl.kurs.inheritance.model.dto.PersonDto;
+import pl.kurs.inheritance.model.Person;
 
 import java.util.List;
 import java.util.Map;

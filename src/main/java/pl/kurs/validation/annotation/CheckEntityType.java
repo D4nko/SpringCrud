@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-//@Constraint(validatedBy = CheckEntityTypeValidator.class)
+@Constraint(validatedBy = CheckEntityTypeValidator.class)
 public @interface CheckEntityType {
 
     String message() default "UNKNOWN_ENTITY_TYPE";

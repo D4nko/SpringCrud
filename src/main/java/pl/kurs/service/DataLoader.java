@@ -12,7 +12,7 @@ import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.model.Car;
 import pl.kurs.model.Garage;
-import pl.kurs.model.inheritance.repository.PersonRepository;
+import pl.kurs.inheritance.repository.PersonRepository;
 import pl.kurs.repository.*;
 
 import java.util.List;

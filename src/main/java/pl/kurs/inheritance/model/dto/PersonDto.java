@@ -1,4 +1,4 @@
-package pl.kurs.model.dto;
+package pl.kurs.inheritance.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;

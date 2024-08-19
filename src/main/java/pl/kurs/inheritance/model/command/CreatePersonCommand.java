@@ -1,4 +1,4 @@
-package pl.kurs.model.command;
+package pl.kurs.inheritance.model.command;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,5 +13,4 @@ public class CreatePersonCommand {
     @CheckEntityType
     private String classType;
     private List<PersonParameter> parameters;
-    private String pesel;
 }

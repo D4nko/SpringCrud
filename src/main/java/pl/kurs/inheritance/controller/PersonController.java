@@ -1,12 +1,14 @@
-package pl.kurs.model.inheritance.controller;
+package pl.kurs.inheritance.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import pl.kurs.model.command.CreatePersonCommand;
-import pl.kurs.model.dto.PersonDto;
-import pl.kurs.model.inheritance.service.PersonService;
+import pl.kurs.inheritance.service.PersonService;
+import pl.kurs.inheritance.model.command.CreatePersonCommand;
+import pl.kurs.inheritance.model.dto.PersonDto;
 
 import java.util.List;
 

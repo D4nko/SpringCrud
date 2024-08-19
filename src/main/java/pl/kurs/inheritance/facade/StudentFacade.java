@@ -1,11 +1,11 @@
-package pl.kurs.model.inheritance.facade;
+package pl.kurs.inheritance.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.repository.DictionaryValueRepository;
-import pl.kurs.model.dto.StudentDto;
-import pl.kurs.model.inheritance.Student;
+import pl.kurs.inheritance.model.Student;
+import pl.kurs.inheritance.model.dto.StudentDto;
 
 import java.util.Map;
 

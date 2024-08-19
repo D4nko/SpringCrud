@@ -11,5 +11,9 @@ public class Main {
 
         SpringApplication.run(Main.class, args);
 
+
+        // nalezy zaimplementowac mechanizm istnienia minimalnych atrybnutow do stworzenia konkretnego typu encji
+        // nowy typ = brak modyfikacji
+
     }
 }

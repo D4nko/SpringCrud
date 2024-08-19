@@ -2,17 +2,19 @@ package pl.kurs.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.RequiredArgsConstructor;
+import pl.kurs.inheritance.facade.PersonFacade;
+import pl.kurs.validation.annotation.CheckEntityType;
 
 import java.lang.annotation.Annotation;
+import java.util.Map;
 
-public class CheckEntityTypeValidator implements ConstraintValidator {
-    @Override
-    public void initialize(Annotation constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
-    }
+@RequiredArgsConstructor
+public class CheckEntityTypeValidator implements ConstraintValidator<CheckEntityType, String> {
 
+    private final Map<String, PersonFacade> facades;
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        return false;
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        return facades.containsKey(value.toLowerCase() + "Facade");
     }
 }

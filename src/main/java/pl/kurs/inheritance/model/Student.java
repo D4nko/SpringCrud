@@ -1,4 +1,4 @@
-package pl.kurs.model.inheritance;
+package pl.kurs.inheritance.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
