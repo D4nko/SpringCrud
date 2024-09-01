@@ -1,6 +1,5 @@
 package pl.kurs.inheritance.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import pl.kurs.model.PersonParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest(classes = Main.class)
@@ -31,7 +29,6 @@ class PersonControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
 
 
     @Test
@@ -48,9 +45,28 @@ class PersonControllerTest {
         String json = objectMapper.writeValueAsString(command);
 
         postman.perform(MockMvcRequestBuilders.post("/api/v1/people")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(jsonPath("$.messages[0]").value("UNKNOWN_ENTITY_TYPE"));
+    }
+
+    @Test
+    public void shouldNotCreatePerson_MissingRequiredFields() throws Exception {
+        CreatePersonCommand command = new CreatePersonCommand();
+        command.setClassType("employee");
+        List<PersonParameter> parameters = new ArrayList<>();
+        parameters.add(new PersonParameter("name", "Jan Krystyna"));
+        parameters.add(new PersonParameter("age", "30"));
+
+        command.setParameters(parameters);
+
+        String json = objectMapper.writeValueAsString(command);
+
+        postman.perform(MockMvcRequestBuilders.post("/api/v1/people")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.messages[0]").value("NO_REQUIRED_ATTRIBUTES"));
     }
 }
