@@ -17,6 +17,7 @@ import pl.kurs.model.Book;
 import pl.kurs.model.command.CreateBookCommand;
 import pl.kurs.model.command.EditBookCommand;
 import pl.kurs.model.dto.BookDto;
+import pl.kurs.model.query.FindBookQuery;
 import pl.kurs.repository.AuthorRepository;
 import pl.kurs.repository.BookRepository;
 import pl.kurs.service.BookService;
@@ -32,14 +33,12 @@ public class BookController {
 
     private final BookService bookService;
 
-
     @GetMapping
-    public ResponseEntity<Page<BookDto>> findAll(@PageableDefault Pageable pageable) {
-        log.info("findAll");
-        return ResponseEntity.ok(bookService.findAll(pageable).map(BookDto::from));
+    public ResponseEntity<Page<BookDto>> findAll(@PageableDefault Pageable pageable, FindBookQuery query) {
+        log.info("findAll({}, {})", pageable, query);
+        return ResponseEntity.ok(bookService.findAll(pageable, query).map(BookDto::from));
     }
 
-    // TODO wyjatki rozroznienie
     @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody CreateBookCommand command) {
         Book book = bookService.save(command);

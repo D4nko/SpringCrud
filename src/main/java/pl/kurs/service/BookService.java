@@ -15,6 +15,7 @@ import pl.kurs.model.Author;
 import pl.kurs.model.Book;
 import pl.kurs.model.command.CreateBookCommand;
 import pl.kurs.model.command.EditBookCommand;
+import pl.kurs.model.query.FindBookQuery;
 import pl.kurs.repository.AuthorRepository;
 import pl.kurs.repository.BookRepository;
 
@@ -35,8 +36,8 @@ public class BookService {
     private final EntityManager entityManager;
 
 
-    public Page<Book> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public Page<Book> findAll(Pageable pageable, FindBookQuery query) {
+        return bookRepository.findAll(query.toPredicate(), pageable);
     }
 
     public Optional<Book> findBookById(Integer id) {
