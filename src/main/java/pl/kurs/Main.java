@@ -12,12 +12,11 @@ public class Main {
 
         SpringApplication.run(Main.class, args);
 
+      /*
+        - security, basic
+        - mikroserwisy 1-2
+        - teoria
+       */
 
-        // nalezy zaimplementowac mechanizm istnienia minimalnych atrybnutow do stworzenia konkretnego typu encji
-
-        // nowy typ = brak modyfikacji
-        // open-closed principle = otwarte na rozszerzenia, ale zamknięte na modyfikacje.
-
-        // next-> query DSL
     }
 }
