@@ -12,6 +12,7 @@ import java.util.Map;
 public class RequiredAttributesValidator implements ConstraintValidator<RequiredAttributes, CreatePersonCommand> {
     private static final Map<String, List<String>> REQUIRED_FIELDS = new HashMap<>();
 
+    // todo czy da sie zrobic tak zeby nie trzeba bylo zmieniac tej klasy jak dojdzie nowa encja
     static {
         REQUIRED_FIELDS.put("employee", List.of("name", "age", "position", "salary"));
         REQUIRED_FIELDS.put("student", List.of("name", "age", "scholarship", "group"));
@@ -35,7 +36,6 @@ public class RequiredAttributesValidator implements ConstraintValidator<Required
                 return false;
             }
         }
-
             return true;
     }
 }

@@ -63,7 +63,6 @@ public class DataLoader {
 //                )
 //        );
 
-        // todo mozna nulle na razie wpisac jako value
 
         log.info("Add temporary dictionaries");
         Dictionary countries = new Dictionary("COUNTRIES");

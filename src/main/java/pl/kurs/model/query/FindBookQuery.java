@@ -24,16 +24,18 @@ public class FindBookQuery {
         if (title != null) conditions.and(QBook.book.title.containsIgnoreCase(title));
         if (category != null) conditions.and(QBook.book.category.eq(category));
         if (available != null) conditions.and(QBook.book.available.eq(available));
+
         if (author != null) {
             String[] authorParts = author.split(" ");
-            //todo dodac drugiego boolean buildera authorCondition tutaj porownanie podobnie jak pozostale elementy do ksaizki
-            // i nastepnie ten authorConditions dodac do conditions
-            // powinno działac tak ze wyszuka nam wszystkie ksiazki danych autorow kazimierz janina kowalski wielka itd
-            Arrays.stream(authorParts).forEach(part -> {
-                conditions.and(QBook.book.author.surname.containsIgnoreCase(part));
-                conditions.and(QBook.book.author.name.containsIgnoreCase(part));
-            });
+            BooleanBuilder authorConditions = new BooleanBuilder();
+            Arrays.stream(authorParts).forEach(part -> authorConditions.or(QBook.book.author.surname.containsIgnoreCase(part))
+                    .or(QBook.book.author.name.containsIgnoreCase(part)));
+            conditions.and(authorConditions);
         }
         return conditions;
     }
+
+    //todo dodac drugiego boolean buildera authorCondition tutaj porownanie podobnie jak pozostale elementy do ksaizki
+    // i nastepnie ten authorConditions dodac do conditions
+    // powinno działac tak ze wyszuka nam wszystkie ksiazki danych autorow kazimierz janina kowalski wielka itd
 }
