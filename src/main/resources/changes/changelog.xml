@@ -87,6 +87,17 @@
         </sql>
     </changeSet>
 
+    <!-- New changeset for Appointment entity -->
+    <changeSet id="20240904" author="jakub6002">
+        <sql>
+            CREATE TABLE appointment (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            appointment_date TIMESTAMP NOT NULL,
+            doctor_id INT NOT NULL,
+            CONSTRAINT fk_appointment_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id)
+            );
+        </sql>
+    </changeSet>
 
 
 </databaseChangeLog>
