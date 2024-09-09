@@ -1,6 +1,5 @@
 package pl.kurs;
 
-import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -12,8 +11,11 @@ public class Main {
 
         SpringApplication.run(Main.class, args);
 
+        // todo do wykonania zadanie z messengera(screen)
+        // api do uzytkownikow
+
+
       /*
-        - security, basic
         - mikroserwisy 1-2
         - teoria
        */
