@@ -47,4 +47,48 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20240912-dominik-004" author="dominik">
+        <sql>
+            INSERT INTO role (id, name) VALUES (DEFAULT, 'USER');
+            INSERT INTO role (id, name) VALUES (DEFAULT, 'ADMIN');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20240912-dominik-005" author="dominik">
+        <sql>
+            INSERT INTO users (id, name, surname, email, password)
+            VALUES (DEFAULT, 'John', 'Doe', 'john.doe@example.com', '$2a$10$jYSZD/nQsYAGARwyH1P6Y.70o0dIOGyJnzefvtWu.cEYN10hJH0uW');
+            INSERT INTO users (id, name, surname, email, password)
+            VALUES (DEFAULT, 'Jane', 'Doe', 'jane.doe@example.com', '$2a$10$/R4F0tiV68eQSx48WzYyBeh4a2FO8KdqitFJSWE1xn9o7w0FRVg3S');
+            INSERT INTO users (id, name, surname, email, password)
+            VALUES (DEFAULT, 'Alice', 'Smith', 'alice.smith@example.com', '$2a$10$iLB4uQ4q6FZLc6n0Hd6AcuIqgj2yoYAivi6iUO16LjIKbiObFMwSq');
+            INSERT INTO users (id, name, surname, email, password)
+            VALUES (DEFAULT, 'Bob', 'Brown', 'bob.brown@example.com', '$2a$10$sH5VR..vO9nV1IDwvRK9z.DX7znFPOiRRoZV4AaUxkYOn0GYQD.Hy');
+        </sql>
+    </changeSet>
+
+    <changeSet id="20240912-dominik-006" author="dominik">
+        <sql>
+            INSERT INTO user_roles (user_id, role_id)
+            VALUES ((SELECT id FROM users WHERE email = 'john.doe@example.com'),
+            (SELECT id FROM role WHERE name = 'ADMIN'));
+
+            INSERT INTO user_roles (user_id, role_id)
+            VALUES ((SELECT id FROM users WHERE email = 'jane.doe@example.com'),
+            (SELECT id FROM role WHERE name = 'USER'));
+
+            INSERT INTO user_roles (user_id, role_id)
+            VALUES ((SELECT id FROM users WHERE email = 'alice.smith@example.com'),
+            (SELECT id FROM role WHERE name = 'USER'));
+
+            INSERT INTO user_roles (user_id, role_id)
+            VALUES ((SELECT id FROM users WHERE email = 'alice.smith@example.com'),
+            (SELECT id FROM role WHERE name = 'ADMIN'));
+
+            INSERT INTO user_roles (user_id, role_id)
+            VALUES ((SELECT id FROM users WHERE email = 'bob.brown@example.com'),
+            (SELECT id FROM role WHERE name = 'USER'));
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
