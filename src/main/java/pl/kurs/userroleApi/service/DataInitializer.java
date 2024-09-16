@@ -33,9 +33,6 @@ public class DataInitializer {
         john.setEmail("john.doe@example.com");
         john.setPassword("password1");
         john.setRoles(Set.of("ADMIN"));
-
-        if(userService.findByEmail("john.doe@example.com")==null)
-
     {
         userService.createUser(john);
         log.info("Created user: john.doe@example.com with ADMIN role");
@@ -48,7 +45,6 @@ public class DataInitializer {
         jane.setPassword("password2");
         jane.setRoles(Set.of("USER"));
 
-        if(userService.findByEmail("jane.doe@example.com")==null)
 
     {
         userService.createUser(jane);
@@ -62,7 +58,6 @@ public class DataInitializer {
         alice.setPassword("password3");
         alice.setRoles(Set.of("USER","ADMIN"));
 
-        if(userService.findByEmail("alice.smith@example.com")==null)
 
     {
         userService.createUser(alice);
@@ -76,7 +71,6 @@ public class DataInitializer {
         bob.setPassword("password4");
         bob.setRoles(Set.of("USER"));
 
-        if(userService.findByEmail("bob.brown@example.com")==null)
 
     {
         userService.createUser(bob);

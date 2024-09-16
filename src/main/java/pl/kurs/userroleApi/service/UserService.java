@@ -69,17 +69,12 @@ public class UserService {
         return mapToUserDTO(user);
     }
 
-//    public UserDto findByEmail(String email) {
-//        return userRepository.findByEmail(email)
-//                .map(this::mapToUserDTO)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
-//    }
-
     public UserDto findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(this::mapToUserDTO)
-                .orElse(null);  // Return null if user doesn't exist
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
     }
+
 
 
     private UserDto mapToUserDTO(User user) {

@@ -57,9 +57,9 @@
     <changeSet id="20240912-dominik-005" author="dominik">
         <sql>
             INSERT INTO users (id, name, surname, email, password)
-            VALUES (DEFAULT, 'John', 'Doe', 'john.doe@example.com', '$2a$10$jYSZD/nQsYAGARwyH1P6Y.70o0dIOGyJnzefvtWu.cEYN10hJH0uW');
+            VALUES (DEFAULT, 'John', 'Doe', 'john.doe@example.com', 'password1');
             INSERT INTO users (id, name, surname, email, password)
-            VALUES (DEFAULT, 'Jane', 'Doe', 'jane.doe@example.com', '$2a$10$/R4F0tiV68eQSx48WzYyBeh4a2FO8KdqitFJSWE1xn9o7w0FRVg3S');
+            VALUES (DEFAULT, 'Jane', 'Doe', 'jane.doe@example.com', 'password2');
             INSERT INTO users (id, name, surname, email, password)
             VALUES (DEFAULT, 'Alice', 'Smith', 'alice.smith@example.com', '$2a$10$iLB4uQ4q6FZLc6n0Hd6AcuIqgj2yoYAivi6iUO16LjIKbiObFMwSq');
             INSERT INTO users (id, name, surname, email, password)
