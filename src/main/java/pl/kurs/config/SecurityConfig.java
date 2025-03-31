@@ -24,7 +24,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/books/**").hasRole("ADMIN")
+                        .requestMatchers("h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/books/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )

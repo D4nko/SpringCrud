@@ -8,7 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.ImportStatusNotFoundException;
+import pl.kurs.model.Author;
+import pl.kurs.model.Book;
 import pl.kurs.model.ImportStatus;
+import pl.kurs.model.command.CreateAuthorCommand;
+import pl.kurs.model.command.CreateBookCommand;
+import pl.kurs.repository.AuthorRepository;
+import pl.kurs.repository.BookRepository;
 import pl.kurs.repository.ImportStatusRepository;
 
 import java.io.BufferedReader;
@@ -26,6 +32,7 @@ public class ImportService {
     private static final String INSERT_BOOK_SQL = "insert into book(book_title, category, available, author_id) values (?,?,?,?)";
     private final JdbcTemplate jdbcTemplate;
     private final ImportStatusFacade importStatusFacade;
+
 
     private void save(String[] args) {
         jdbcTemplate.update(INSERT_BOOK_SQL,
@@ -55,7 +62,7 @@ public class ImportService {
 
     }
 
-    private void countTime(AtomicInteger counter, AtomicLong start, int id) {
+    public void countTime(AtomicInteger counter, AtomicLong start, int id) {
         int progress = counter.incrementAndGet();
         if (progress % 10000 == 0) {
             log.info("Imported: {} in {} ms", counter, (System.currentTimeMillis() - start.get()));

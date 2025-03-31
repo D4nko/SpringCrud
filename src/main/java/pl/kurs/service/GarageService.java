@@ -65,7 +65,7 @@ public class GarageService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public void addCarToGarage(int id, int carId) {
-        Garage garage = garageRepository.findById(id).orElseThrow(GarageNotFoundException::new);
+        Garage garage = garageRepository.findByIdWithLocking(id).orElseThrow(GarageNotFoundException::new);
         Car car = carRepository.findById(carId).orElseThrow(CarNotFoundException::new);
         garage.addCar(car);
         garageRepository.saveAndFlush(garage);

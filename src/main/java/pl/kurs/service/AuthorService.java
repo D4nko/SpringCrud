@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.exceptions.AuthorNotFoundException;
@@ -55,6 +56,7 @@ public class AuthorService {
         return authorRepository.saveAndFlush(author);
     }
 
+    @PreAuthorize("ROLE_ADMIN")
     public Author partiallyEdit(int id, EditAuthorCommand command) {
         Author author = authorRepository.findById(id).orElseThrow(AuthorNotFoundException::new);
         Optional.ofNullable(command.getFirstName()).ifPresent(author::setName);

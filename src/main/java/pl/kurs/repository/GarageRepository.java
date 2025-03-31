@@ -1,6 +1,8 @@
 package pl.kurs.repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import pl.kurs.model.Garage;
@@ -14,4 +16,8 @@ public interface GarageRepository extends JpaRepository<Garage, Integer> {
 
     @Query("select a from Garage a left join fetch a.cars where a.id = ?1")
     Optional<Garage> findByIdWithCars(int id);
+
+    @Query("select g from Garage g where g.id = ?1")
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    Optional<Garage> findByIdWithLocking(int id);
 }
